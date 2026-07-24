@@ -21,6 +21,24 @@ advancement revoke @s only pack:events/on_cow_hit_player_hurt_entity
 tellraw @a "You hit a cow!"
 ```
 
+```json [on_cow_hit_player_hurt_entity.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:cow"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:on_cow_hit"
+    }
+}
+```
+
 :::
 
 ### How it works
@@ -61,6 +79,24 @@ def on_stick_use():
 tellraw @a "You used a stick!"
 ```
 
+```json [on_stick_use_using_item.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "items": "minecraft:stick"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:on_stick_use"
+    }
+}
+```
+
 :::
 
 ### Accessing the Event Details Externally
@@ -87,6 +123,20 @@ def external_logic():
 ```mcfunction [external_logic.mcfunction]
 tellraw @a "pack:events/my_tick_tick"
 advancement revoke @a only pack:events/my_tick_tick
+```
+
+```json [my_tick_tick.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:tick",
+            "conditions": {}
+        }
+    },
+    "rewards": {
+        "function": "pack:my_tick"
+    }
+}
 ```
 
 :::

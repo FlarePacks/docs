@@ -56,7 +56,7 @@ c = a * b  # Flare handles all scaling math for you!
 scoreboard objectives add __pack__vars__ dummy
 scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
-scoreboard players set !_100000 __pack__constant__ 100000
+scoreboard players set #_100000 __pack__constant__ 100000
 ```
 
 ```mcfunction [__init__.mcfunction]
@@ -64,7 +64,7 @@ scoreboard players set pack_a __pack__vars__ 150000
 scoreboard players set pack_b __pack__vars__ 200000
 scoreboard players operation pack_c __pack__vars__ = pack_a __pack__vars__
 scoreboard players operation pack_c __pack__vars__ *= pack_b __pack__vars__
-scoreboard players operation pack_c __pack__vars__ /= !_100000 __pack__constant__
+scoreboard players operation pack_c __pack__vars__ /= #_100000 __pack__constant__
 ```
 
 :::
@@ -87,49 +87,49 @@ x *= 5
 scoreboard objectives add __pack__vars__ dummy
 scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
-scoreboard players set !_10000 __pack__constant__ 10000
+scoreboard players set #_10000 __pack__constant__ 10000
 ```
 
 ```mcfunction [__init__.mcfunction]
 scoreboard players set _0 __pack__vars__ 0
 scoreboard players set _1 __pack__vars__ 0
-scoreboard players set !big0_0 __pack__temp__ 5
-scoreboard players set !big0_1 __pack__temp__ 0
-scoreboard players set !C_0 __pack__temp__ 0
-scoreboard players set !C_1 __pack__temp__ 0
-scoreboard players set !C_2 __pack__temp__ 0
-scoreboard players set !C_3 __pack__temp__ 0
-scoreboard players operation !mul __pack__temp__ = _0 __pack__vars__
-scoreboard players operation !mul __pack__temp__ *= !big0_0 __pack__temp__
-scoreboard players operation !C_0 __pack__temp__ += !mul __pack__temp__
-scoreboard players operation !mul __pack__temp__ = _0 __pack__vars__
-scoreboard players operation !mul __pack__temp__ *= !big0_1 __pack__temp__
-scoreboard players operation !C_1 __pack__temp__ += !mul __pack__temp__
-scoreboard players operation !mul __pack__temp__ = _1 __pack__vars__
-scoreboard players operation !mul __pack__temp__ *= !big0_0 __pack__temp__
-scoreboard players operation !C_1 __pack__temp__ += !mul __pack__temp__
-scoreboard players operation !mul __pack__temp__ = _1 __pack__vars__
-scoreboard players operation !mul __pack__temp__ *= !big0_1 __pack__temp__
-scoreboard players operation !C_2 __pack__temp__ += !mul __pack__temp__
-scoreboard players set !carry __pack__temp__ 0
-scoreboard players operation !C_0 __pack__temp__ += !carry __pack__temp__
-scoreboard players operation !carry __pack__temp__ = !C_0 __pack__temp__
-scoreboard players operation !carry __pack__temp__ /= !_10000 __pack__constant__
-scoreboard players operation !C_0 __pack__temp__ %= !_10000 __pack__constant__
-scoreboard players operation !C_1 __pack__temp__ += !carry __pack__temp__
-scoreboard players operation !carry __pack__temp__ = !C_1 __pack__temp__
-scoreboard players operation !carry __pack__temp__ /= !_10000 __pack__constant__
-scoreboard players operation !C_1 __pack__temp__ %= !_10000 __pack__constant__
-scoreboard players operation !C_2 __pack__temp__ += !carry __pack__temp__
-scoreboard players operation !carry __pack__temp__ = !C_2 __pack__temp__
-scoreboard players operation !carry __pack__temp__ /= !_10000 __pack__constant__
-scoreboard players operation !C_2 __pack__temp__ %= !_10000 __pack__constant__
-scoreboard players operation !C_3 __pack__temp__ += !carry __pack__temp__
-scoreboard players operation !carry __pack__temp__ = !C_3 __pack__temp__
-scoreboard players operation !carry __pack__temp__ /= !_10000 __pack__constant__
-scoreboard players operation !C_3 __pack__temp__ %= !_10000 __pack__constant__
-scoreboard players operation _0 __pack__vars__ = !C_0 __pack__temp__
-scoreboard players operation _1 __pack__vars__ = !C_1 __pack__temp__
+scoreboard players set #big0_0 __pack__temp__ 5
+scoreboard players set #big0_1 __pack__temp__ 0
+scoreboard players set #C_0 __pack__temp__ 0
+scoreboard players set #C_1 __pack__temp__ 0
+scoreboard players set #C_2 __pack__temp__ 0
+scoreboard players set #C_3 __pack__temp__ 0
+scoreboard players operation #mul __pack__temp__ = _0 __pack__vars__
+scoreboard players operation #mul __pack__temp__ *= #big0_0 __pack__temp__
+scoreboard players operation #C_0 __pack__temp__ += #mul __pack__temp__
+scoreboard players operation #mul __pack__temp__ = _0 __pack__vars__
+scoreboard players operation #mul __pack__temp__ *= #big0_1 __pack__temp__
+scoreboard players operation #C_1 __pack__temp__ += #mul __pack__temp__
+scoreboard players operation #mul __pack__temp__ = _1 __pack__vars__
+scoreboard players operation #mul __pack__temp__ *= #big0_0 __pack__temp__
+scoreboard players operation #C_1 __pack__temp__ += #mul __pack__temp__
+scoreboard players operation #mul __pack__temp__ = _1 __pack__vars__
+scoreboard players operation #mul __pack__temp__ *= #big0_1 __pack__temp__
+scoreboard players operation #C_2 __pack__temp__ += #mul __pack__temp__
+scoreboard players set #carry __pack__temp__ 0
+scoreboard players operation #C_0 __pack__temp__ += #carry __pack__temp__
+scoreboard players operation #carry __pack__temp__ = #C_0 __pack__temp__
+scoreboard players operation #carry __pack__temp__ /= #_10000 __pack__constant__
+scoreboard players operation #C_0 __pack__temp__ %= #_10000 __pack__constant__
+scoreboard players operation #C_1 __pack__temp__ += #carry __pack__temp__
+scoreboard players operation #carry __pack__temp__ = #C_1 __pack__temp__
+scoreboard players operation #carry __pack__temp__ /= #_10000 __pack__constant__
+scoreboard players operation #C_1 __pack__temp__ %= #_10000 __pack__constant__
+scoreboard players operation #C_2 __pack__temp__ += #carry __pack__temp__
+scoreboard players operation #carry __pack__temp__ = #C_2 __pack__temp__
+scoreboard players operation #carry __pack__temp__ /= #_10000 __pack__constant__
+scoreboard players operation #C_2 __pack__temp__ %= #_10000 __pack__constant__
+scoreboard players operation #C_3 __pack__temp__ += #carry __pack__temp__
+scoreboard players operation #carry __pack__temp__ = #C_3 __pack__temp__
+scoreboard players operation #carry __pack__temp__ /= #_10000 __pack__constant__
+scoreboard players operation #C_3 __pack__temp__ %= #_10000 __pack__constant__
+scoreboard players operation _0 __pack__vars__ = #C_0 __pack__temp__
+scoreboard players operation _1 __pack__vars__ = #C_1 __pack__temp__
 ```
 
 :::

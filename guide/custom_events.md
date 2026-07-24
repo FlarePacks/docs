@@ -44,6 +44,72 @@ advancement revoke @s only pack:events/wand_right_click_super_shorthand_using_it
 tellraw @a "Used the wand!"
 ```
 
+```json [wand_right_click_using_item.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": {
+                            "my_wand": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:wand_right_click"
+    }
+}
+```
+
+```json [wand_right_click_shorthand_using_item.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": {
+                            "my_wand": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:wand_right_click_shorthand"
+    }
+}
+```
+
+```json [wand_right_click_super_shorthand_using_item.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": {
+                            "my_wand": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:wand_right_click_super_shorthand"
+    }
+}
+```
+
 :::
 
 By default, the right click event will continuously trigger every tick that the player holds right click. If you only want the event to trigger **exactly once per click** (preventing rapid-fire execution), pass `once=True`:
@@ -71,6 +137,42 @@ scoreboard players set @s pack_wand_right_click_once_cd 2
 advancement revoke @s only pack:events/wand_right_click_once_tick_tick
 execute unless score @s pack_wand_right_click_once_cd matches 2 run scoreboard players reset @s pack_wand_right_click_once_cd
 execute if score @s pack_wand_right_click_once_cd matches 2 run scoreboard players set @s pack_wand_right_click_once_cd 1
+```
+
+```json [wand_right_click_once_tick_tick.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:tick",
+            "conditions": {}
+        }
+    },
+    "rewards": {
+        "function": "pack:wand_right_click_once_tick"
+    }
+}
+```
+
+```json [wand_right_click_once_using_item.json.json]
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": {
+                            "my_wand": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "pack:wand_right_click_once"
+    }
+}
 ```
 
 :::
@@ -108,6 +210,37 @@ give @s wooden_sword[enchantments={"pack:left_click_on_wand_punch":1}]
 
 ```mcfunction [on_wand_punch.mcfunction]
 tellraw @a "Left clicked!"
+```
+
+```json [left_click_on_wand_punch.json.json]
+{
+    "description": "",
+    "supported_items": [],
+    "weight": 1,
+    "max_level": 1,
+    "min_cost": {
+        "base": 0,
+        "per_level_above_first": 0
+    },
+    "max_cost": {
+        "base": 0,
+        "per_level_above_first": 0
+    },
+    "anvil_cost": 0,
+    "slots": [
+        "hand"
+    ],
+    "effects": {
+        "minecraft:post_piercing_attack": [
+            {
+                "effect": {
+                    "type": "minecraft:run_function",
+                    "function": "pack:on_wand_punch"
+                }
+            }
+        ]
+    }
+}
 ```
 
 :::

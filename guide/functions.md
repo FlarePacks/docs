@@ -33,8 +33,8 @@ scoreboard players set pack_y __pack__vars__ 20
 scoreboard players operation add_scores_a __pack__vars__ = pack_x __pack__vars__
 scoreboard players operation add_scores_b __pack__vars__ = pack_y __pack__vars__
 function pack:add_scores
-scoreboard players operation !ret0 __pack__temp__ = pack_add_scores_ret __pack__vars__
-scoreboard players operation pack_z __pack__vars__ = !ret0 __pack__temp__
+scoreboard players operation #ret0 __pack__temp__ = pack_add_scores_ret __pack__vars__
+scoreboard players operation pack_z __pack__vars__ = #ret0 __pack__temp__
 ```
 
 ```mcfunction [add_scores.mcfunction]
@@ -135,7 +135,7 @@ def broken():          # Returns a plain Python value Flare can't map to MC
 scoreboard objectives add __pack__vars__ dummy
 scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
-scoreboard players set !_2 __pack__constant__ 2
+scoreboard players set #_2 __pack__constant__ 2
 ```
 
 ```mcfunction [broken.mcfunction]
@@ -144,7 +144,7 @@ return 42
 
 ```mcfunction [double.mcfunction]
 scoreboard players operation pack_double_ret __pack__vars__ = double_x __pack__vars__
-scoreboard players operation pack_double_ret __pack__vars__ *= !_2 __pack__constant__
+scoreboard players operation pack_double_ret __pack__vars__ *= #_2 __pack__constant__
 ```
 
 ```mcfunction [greet.mcfunction]
@@ -193,12 +193,12 @@ def calculate(a: score) -> score:
 scoreboard objectives add __pack__vars__ dummy
 scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
-scoreboard players set !_2 __pack__constant__ 2
+scoreboard players set #_2 __pack__constant__ 2
 ```
 
 ```mcfunction [calculate.mcfunction]
 scoreboard players operation pack_calculate_ret __pack__vars__ = calculate_a __pack__vars__
-scoreboard players operation pack_calculate_ret __pack__vars__ *= !_2 __pack__constant__
+scoreboard players operation pack_calculate_ret __pack__vars__ *= #_2 __pack__constant__
 scoreboard players add pack_calculate_ret __pack__vars__ 10
 scoreboard players operation pack_calculate_ret __pack__vars__ = pack_calculate_ret __pack__vars__
 ```
@@ -285,30 +285,29 @@ def factorial(n: nbt[int]) -> nbt[int]:
 scoreboard objectives add __pack__temp__ dummy
 ```
 
+```mcfunction [_factorial/generated_0.mcfunction]
+data modify storage pack:__flare_returns__ pack_factorial set value 1
+```
+
 ```mcfunction [factorial.mcfunction]
-execute store result score !c0 __pack__temp__ run data get storage pack:__flare_args__ factorial_n[-1]
-scoreboard players set !ret1 __pack__temp__ 0
-execute if score !c0 __pack__temp__ matches ..1 store result score !ret1 __pack__temp__ run function pack:_factorial/generated_0
-execute if score !ret1 __pack__temp__ matches 1 run return 1
+execute store result score #c0 __pack__temp__ run data get storage pack:__flare_args__ factorial_n[-1]
+scoreboard players set #ret1 __pack__temp__ 0
+execute if score #c0 __pack__temp__ matches ..1 store result score #ret1 __pack__temp__ run function pack:_factorial/generated_0
+execute if score #ret1 __pack__temp__ matches 1 run return 1
 data modify storage pack:__flare_temp__ !t2 set from storage pack:__flare_args__ factorial_n[-1]
-execute store result score !sub0 __pack__temp__ run data get storage pack:__flare_temp__ !t2
-scoreboard players remove !sub0 __pack__temp__ 1
-execute store result storage pack:__flare_temp__ !t2 int 1 run scoreboard players get !sub0 __pack__temp__
+execute store result score #sub0 __pack__temp__ run data get storage pack:__flare_temp__ !t2
+scoreboard players remove #sub0 __pack__temp__ 1
+execute store result storage pack:__flare_temp__ !t2 int 1 run scoreboard players get #sub0 __pack__temp__
 data modify storage pack:__flare_args__ factorial_n append from storage pack:__flare_temp__ !t2
 function pack:factorial
 data remove storage pack:__flare_args__ factorial_n[-1]
 data modify storage pack:__flare_temp__ !ret3 set from storage pack:__flare_returns__ pack_factorial
-data modify storage flare:temp !temp_4 set from storage pack:__flare_args__ factorial_n[-1]
-execute store result score !mul0 __pack__temp__ run data get storage pack:__flare_temp__ !ret3
-execute store result score !mul1 __pack__temp__ run data get storage flare:temp !temp_4
-scoreboard players operation !mul1 __pack__temp__ *= !mul0 __pack__temp__
-execute store result storage flare:temp !temp_4 int 1 run scoreboard players get !mul1 __pack__temp__
-data modify storage pack:__flare_returns__ pack_factorial set from storage flare:temp !temp_4
-```
-
-```mcfunction [_factorial/generated_0.mcfunction]
-data modify storage pack:__flare_returns__ pack_factorial set value 1
-return 1
+data modify storage flare:temp #temp_4 set from storage pack:__flare_args__ factorial_n[-1]
+execute store result score #mul0 __pack__temp__ run data get storage pack:__flare_temp__ !ret3
+execute store result score #mul1 __pack__temp__ run data get storage flare:temp #temp_4
+scoreboard players operation #mul1 __pack__temp__ *= #mul0 __pack__temp__
+execute store result storage flare:temp #temp_4 int 1 run scoreboard players get #mul1 __pack__temp__
+data modify storage pack:__flare_returns__ pack_factorial set from storage flare:temp #temp_4
 ```
 
 :::
@@ -402,7 +401,7 @@ def announce(msg: macro, player: nbt[str]):
 ```
 
 ```mcfunction [announce.mcfunction]
-tellraw @a {text: $(msg)}
+$tellraw @a {text: $(msg)}
 $data modify storage pack:__flare_args__ announce_player set value "$(msg)"
 ```
 
@@ -532,11 +531,11 @@ schedule function pack:___init__/sched_0 20t append
 ```
 
 ```mcfunction [___init__/sched_0.mcfunction]
-execute store result score !add0 __pack__temp__ run data get storage pack:vars pack_run_count
-scoreboard players add !add0 __pack__temp__ 1
-execute store result storage pack:vars pack_run_count int 1 run scoreboard players get !add0 __pack__temp__
-execute store result score !c0 __pack__temp__ run data get storage pack:vars pack_run_count
-execute if score !c0 __pack__temp__ matches 10.. run schedule clear pack:___init__/sched_0
+execute store result score #add0 __pack__temp__ run data get storage pack:vars pack_run_count
+scoreboard players add #add0 __pack__temp__ 1
+execute store result storage pack:vars pack_run_count int 1 run scoreboard players get #add0 __pack__temp__
+execute store result score #c0 __pack__temp__ run data get storage pack:vars pack_run_count
+execute if score #c0 __pack__temp__ matches 10.. run schedule clear pack:___init__/sched_0
 ```
 
 :::
@@ -633,114 +632,114 @@ ascii_val = ord(char) # ascii_val dynamically becomes 65
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__vars__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_char set value "A"
-scoreboard players set pack:vars pack_ascii_val 0
+scoreboard players set pack_ascii_val __pack__vars__ 0
 data modify storage flare:temp ord_char_1 set from storage pack:vars pack_char 0 1
-execute if data storage flare:temp {"ord_char_1": "0"} run scoreboard players set pack:vars pack_ascii_val 48
-execute if data storage flare:temp {"ord_char_1": "1"} run scoreboard players set pack:vars pack_ascii_val 49
-execute if data storage flare:temp {"ord_char_1": "2"} run scoreboard players set pack:vars pack_ascii_val 50
-execute if data storage flare:temp {"ord_char_1": "3"} run scoreboard players set pack:vars pack_ascii_val 51
-execute if data storage flare:temp {"ord_char_1": "4"} run scoreboard players set pack:vars pack_ascii_val 52
-execute if data storage flare:temp {"ord_char_1": "5"} run scoreboard players set pack:vars pack_ascii_val 53
-execute if data storage flare:temp {"ord_char_1": "6"} run scoreboard players set pack:vars pack_ascii_val 54
-execute if data storage flare:temp {"ord_char_1": "7"} run scoreboard players set pack:vars pack_ascii_val 55
-execute if data storage flare:temp {"ord_char_1": "8"} run scoreboard players set pack:vars pack_ascii_val 56
-execute if data storage flare:temp {"ord_char_1": "9"} run scoreboard players set pack:vars pack_ascii_val 57
-execute if data storage flare:temp {"ord_char_1": "a"} run scoreboard players set pack:vars pack_ascii_val 97
-execute if data storage flare:temp {"ord_char_1": "b"} run scoreboard players set pack:vars pack_ascii_val 98
-execute if data storage flare:temp {"ord_char_1": "c"} run scoreboard players set pack:vars pack_ascii_val 99
-execute if data storage flare:temp {"ord_char_1": "d"} run scoreboard players set pack:vars pack_ascii_val 100
-execute if data storage flare:temp {"ord_char_1": "e"} run scoreboard players set pack:vars pack_ascii_val 101
-execute if data storage flare:temp {"ord_char_1": "f"} run scoreboard players set pack:vars pack_ascii_val 102
-execute if data storage flare:temp {"ord_char_1": "g"} run scoreboard players set pack:vars pack_ascii_val 103
-execute if data storage flare:temp {"ord_char_1": "h"} run scoreboard players set pack:vars pack_ascii_val 104
-execute if data storage flare:temp {"ord_char_1": "i"} run scoreboard players set pack:vars pack_ascii_val 105
-execute if data storage flare:temp {"ord_char_1": "j"} run scoreboard players set pack:vars pack_ascii_val 106
-execute if data storage flare:temp {"ord_char_1": "k"} run scoreboard players set pack:vars pack_ascii_val 107
-execute if data storage flare:temp {"ord_char_1": "l"} run scoreboard players set pack:vars pack_ascii_val 108
-execute if data storage flare:temp {"ord_char_1": "m"} run scoreboard players set pack:vars pack_ascii_val 109
-execute if data storage flare:temp {"ord_char_1": "n"} run scoreboard players set pack:vars pack_ascii_val 110
-execute if data storage flare:temp {"ord_char_1": "o"} run scoreboard players set pack:vars pack_ascii_val 111
-execute if data storage flare:temp {"ord_char_1": "p"} run scoreboard players set pack:vars pack_ascii_val 112
-execute if data storage flare:temp {"ord_char_1": "q"} run scoreboard players set pack:vars pack_ascii_val 113
-execute if data storage flare:temp {"ord_char_1": "r"} run scoreboard players set pack:vars pack_ascii_val 114
-execute if data storage flare:temp {"ord_char_1": "s"} run scoreboard players set pack:vars pack_ascii_val 115
-execute if data storage flare:temp {"ord_char_1": "t"} run scoreboard players set pack:vars pack_ascii_val 116
-execute if data storage flare:temp {"ord_char_1": "u"} run scoreboard players set pack:vars pack_ascii_val 117
-execute if data storage flare:temp {"ord_char_1": "v"} run scoreboard players set pack:vars pack_ascii_val 118
-execute if data storage flare:temp {"ord_char_1": "w"} run scoreboard players set pack:vars pack_ascii_val 119
-execute if data storage flare:temp {"ord_char_1": "x"} run scoreboard players set pack:vars pack_ascii_val 120
-execute if data storage flare:temp {"ord_char_1": "y"} run scoreboard players set pack:vars pack_ascii_val 121
-execute if data storage flare:temp {"ord_char_1": "z"} run scoreboard players set pack:vars pack_ascii_val 122
-execute if data storage flare:temp {"ord_char_1": "A"} run scoreboard players set pack:vars pack_ascii_val 65
-execute if data storage flare:temp {"ord_char_1": "B"} run scoreboard players set pack:vars pack_ascii_val 66
-execute if data storage flare:temp {"ord_char_1": "C"} run scoreboard players set pack:vars pack_ascii_val 67
-execute if data storage flare:temp {"ord_char_1": "D"} run scoreboard players set pack:vars pack_ascii_val 68
-execute if data storage flare:temp {"ord_char_1": "E"} run scoreboard players set pack:vars pack_ascii_val 69
-execute if data storage flare:temp {"ord_char_1": "F"} run scoreboard players set pack:vars pack_ascii_val 70
-execute if data storage flare:temp {"ord_char_1": "G"} run scoreboard players set pack:vars pack_ascii_val 71
-execute if data storage flare:temp {"ord_char_1": "H"} run scoreboard players set pack:vars pack_ascii_val 72
-execute if data storage flare:temp {"ord_char_1": "I"} run scoreboard players set pack:vars pack_ascii_val 73
-execute if data storage flare:temp {"ord_char_1": "J"} run scoreboard players set pack:vars pack_ascii_val 74
-execute if data storage flare:temp {"ord_char_1": "K"} run scoreboard players set pack:vars pack_ascii_val 75
-execute if data storage flare:temp {"ord_char_1": "L"} run scoreboard players set pack:vars pack_ascii_val 76
-execute if data storage flare:temp {"ord_char_1": "M"} run scoreboard players set pack:vars pack_ascii_val 77
-execute if data storage flare:temp {"ord_char_1": "N"} run scoreboard players set pack:vars pack_ascii_val 78
-execute if data storage flare:temp {"ord_char_1": "O"} run scoreboard players set pack:vars pack_ascii_val 79
-execute if data storage flare:temp {"ord_char_1": "P"} run scoreboard players set pack:vars pack_ascii_val 80
-execute if data storage flare:temp {"ord_char_1": "Q"} run scoreboard players set pack:vars pack_ascii_val 81
-execute if data storage flare:temp {"ord_char_1": "R"} run scoreboard players set pack:vars pack_ascii_val 82
-execute if data storage flare:temp {"ord_char_1": "S"} run scoreboard players set pack:vars pack_ascii_val 83
-execute if data storage flare:temp {"ord_char_1": "T"} run scoreboard players set pack:vars pack_ascii_val 84
-execute if data storage flare:temp {"ord_char_1": "U"} run scoreboard players set pack:vars pack_ascii_val 85
-execute if data storage flare:temp {"ord_char_1": "V"} run scoreboard players set pack:vars pack_ascii_val 86
-execute if data storage flare:temp {"ord_char_1": "W"} run scoreboard players set pack:vars pack_ascii_val 87
-execute if data storage flare:temp {"ord_char_1": "X"} run scoreboard players set pack:vars pack_ascii_val 88
-execute if data storage flare:temp {"ord_char_1": "Y"} run scoreboard players set pack:vars pack_ascii_val 89
-execute if data storage flare:temp {"ord_char_1": "Z"} run scoreboard players set pack:vars pack_ascii_val 90
-execute if data storage flare:temp {"ord_char_1": "!"} run scoreboard players set pack:vars pack_ascii_val 33
-execute if data storage flare:temp {"ord_char_1": "\""} run scoreboard players set pack:vars pack_ascii_val 34
-execute if data storage flare:temp {"ord_char_1": "#"} run scoreboard players set pack:vars pack_ascii_val 35
-execute if data storage flare:temp {"ord_char_1": "$"} run scoreboard players set pack:vars pack_ascii_val 36
-execute if data storage flare:temp {"ord_char_1": "%"} run scoreboard players set pack:vars pack_ascii_val 37
-execute if data storage flare:temp {"ord_char_1": "&"} run scoreboard players set pack:vars pack_ascii_val 38
-execute if data storage flare:temp {"ord_char_1": "'"} run scoreboard players set pack:vars pack_ascii_val 39
-execute if data storage flare:temp {"ord_char_1": "("} run scoreboard players set pack:vars pack_ascii_val 40
-execute if data storage flare:temp {"ord_char_1": ")"} run scoreboard players set pack:vars pack_ascii_val 41
-execute if data storage flare:temp {"ord_char_1": "*"} run scoreboard players set pack:vars pack_ascii_val 42
-execute if data storage flare:temp {"ord_char_1": "+"} run scoreboard players set pack:vars pack_ascii_val 43
-execute if data storage flare:temp {"ord_char_1": ","} run scoreboard players set pack:vars pack_ascii_val 44
-execute if data storage flare:temp {"ord_char_1": "-"} run scoreboard players set pack:vars pack_ascii_val 45
-execute if data storage flare:temp {"ord_char_1": "."} run scoreboard players set pack:vars pack_ascii_val 46
-execute if data storage flare:temp {"ord_char_1": "/"} run scoreboard players set pack:vars pack_ascii_val 47
-execute if data storage flare:temp {"ord_char_1": ":"} run scoreboard players set pack:vars pack_ascii_val 58
-execute if data storage flare:temp {"ord_char_1": ";"} run scoreboard players set pack:vars pack_ascii_val 59
-execute if data storage flare:temp {"ord_char_1": "<"} run scoreboard players set pack:vars pack_ascii_val 60
-execute if data storage flare:temp {"ord_char_1": "="} run scoreboard players set pack:vars pack_ascii_val 61
-execute if data storage flare:temp {"ord_char_1": ">"} run scoreboard players set pack:vars pack_ascii_val 62
-execute if data storage flare:temp {"ord_char_1": "?"} run scoreboard players set pack:vars pack_ascii_val 63
-execute if data storage flare:temp {"ord_char_1": "@"} run scoreboard players set pack:vars pack_ascii_val 64
-execute if data storage flare:temp {"ord_char_1": "["} run scoreboard players set pack:vars pack_ascii_val 91
-execute if data storage flare:temp {"ord_char_1": "\\"} run scoreboard players set pack:vars pack_ascii_val 92
-execute if data storage flare:temp {"ord_char_1": "]"} run scoreboard players set pack:vars pack_ascii_val 93
-execute if data storage flare:temp {"ord_char_1": "^"} run scoreboard players set pack:vars pack_ascii_val 94
-execute if data storage flare:temp {"ord_char_1": "_"} run scoreboard players set pack:vars pack_ascii_val 95
-execute if data storage flare:temp {"ord_char_1": "`"} run scoreboard players set pack:vars pack_ascii_val 96
-execute if data storage flare:temp {"ord_char_1": "{"} run scoreboard players set pack:vars pack_ascii_val 123
-execute if data storage flare:temp {"ord_char_1": "|"} run scoreboard players set pack:vars pack_ascii_val 124
-execute if data storage flare:temp {"ord_char_1": "}"} run scoreboard players set pack:vars pack_ascii_val 125
-execute if data storage flare:temp {"ord_char_1": "~"} run scoreboard players set pack:vars pack_ascii_val 126
-execute if data storage flare:temp {"ord_char_1": " "} run scoreboard players set pack:vars pack_ascii_val 32
-execute if data storage flare:temp {"ord_char_1": "	"} run scoreboard players set pack:vars pack_ascii_val 9
+execute if data storage flare:temp {"ord_char_1": "0"} run scoreboard players set pack_ascii_val __pack__vars__ 48
+execute if data storage flare:temp {"ord_char_1": "1"} run scoreboard players set pack_ascii_val __pack__vars__ 49
+execute if data storage flare:temp {"ord_char_1": "2"} run scoreboard players set pack_ascii_val __pack__vars__ 50
+execute if data storage flare:temp {"ord_char_1": "3"} run scoreboard players set pack_ascii_val __pack__vars__ 51
+execute if data storage flare:temp {"ord_char_1": "4"} run scoreboard players set pack_ascii_val __pack__vars__ 52
+execute if data storage flare:temp {"ord_char_1": "5"} run scoreboard players set pack_ascii_val __pack__vars__ 53
+execute if data storage flare:temp {"ord_char_1": "6"} run scoreboard players set pack_ascii_val __pack__vars__ 54
+execute if data storage flare:temp {"ord_char_1": "7"} run scoreboard players set pack_ascii_val __pack__vars__ 55
+execute if data storage flare:temp {"ord_char_1": "8"} run scoreboard players set pack_ascii_val __pack__vars__ 56
+execute if data storage flare:temp {"ord_char_1": "9"} run scoreboard players set pack_ascii_val __pack__vars__ 57
+execute if data storage flare:temp {"ord_char_1": "a"} run scoreboard players set pack_ascii_val __pack__vars__ 97
+execute if data storage flare:temp {"ord_char_1": "b"} run scoreboard players set pack_ascii_val __pack__vars__ 98
+execute if data storage flare:temp {"ord_char_1": "c"} run scoreboard players set pack_ascii_val __pack__vars__ 99
+execute if data storage flare:temp {"ord_char_1": "d"} run scoreboard players set pack_ascii_val __pack__vars__ 100
+execute if data storage flare:temp {"ord_char_1": "e"} run scoreboard players set pack_ascii_val __pack__vars__ 101
+execute if data storage flare:temp {"ord_char_1": "f"} run scoreboard players set pack_ascii_val __pack__vars__ 102
+execute if data storage flare:temp {"ord_char_1": "g"} run scoreboard players set pack_ascii_val __pack__vars__ 103
+execute if data storage flare:temp {"ord_char_1": "h"} run scoreboard players set pack_ascii_val __pack__vars__ 104
+execute if data storage flare:temp {"ord_char_1": "i"} run scoreboard players set pack_ascii_val __pack__vars__ 105
+execute if data storage flare:temp {"ord_char_1": "j"} run scoreboard players set pack_ascii_val __pack__vars__ 106
+execute if data storage flare:temp {"ord_char_1": "k"} run scoreboard players set pack_ascii_val __pack__vars__ 107
+execute if data storage flare:temp {"ord_char_1": "l"} run scoreboard players set pack_ascii_val __pack__vars__ 108
+execute if data storage flare:temp {"ord_char_1": "m"} run scoreboard players set pack_ascii_val __pack__vars__ 109
+execute if data storage flare:temp {"ord_char_1": "n"} run scoreboard players set pack_ascii_val __pack__vars__ 110
+execute if data storage flare:temp {"ord_char_1": "o"} run scoreboard players set pack_ascii_val __pack__vars__ 111
+execute if data storage flare:temp {"ord_char_1": "p"} run scoreboard players set pack_ascii_val __pack__vars__ 112
+execute if data storage flare:temp {"ord_char_1": "q"} run scoreboard players set pack_ascii_val __pack__vars__ 113
+execute if data storage flare:temp {"ord_char_1": "r"} run scoreboard players set pack_ascii_val __pack__vars__ 114
+execute if data storage flare:temp {"ord_char_1": "s"} run scoreboard players set pack_ascii_val __pack__vars__ 115
+execute if data storage flare:temp {"ord_char_1": "t"} run scoreboard players set pack_ascii_val __pack__vars__ 116
+execute if data storage flare:temp {"ord_char_1": "u"} run scoreboard players set pack_ascii_val __pack__vars__ 117
+execute if data storage flare:temp {"ord_char_1": "v"} run scoreboard players set pack_ascii_val __pack__vars__ 118
+execute if data storage flare:temp {"ord_char_1": "w"} run scoreboard players set pack_ascii_val __pack__vars__ 119
+execute if data storage flare:temp {"ord_char_1": "x"} run scoreboard players set pack_ascii_val __pack__vars__ 120
+execute if data storage flare:temp {"ord_char_1": "y"} run scoreboard players set pack_ascii_val __pack__vars__ 121
+execute if data storage flare:temp {"ord_char_1": "z"} run scoreboard players set pack_ascii_val __pack__vars__ 122
+execute if data storage flare:temp {"ord_char_1": "A"} run scoreboard players set pack_ascii_val __pack__vars__ 65
+execute if data storage flare:temp {"ord_char_1": "B"} run scoreboard players set pack_ascii_val __pack__vars__ 66
+execute if data storage flare:temp {"ord_char_1": "C"} run scoreboard players set pack_ascii_val __pack__vars__ 67
+execute if data storage flare:temp {"ord_char_1": "D"} run scoreboard players set pack_ascii_val __pack__vars__ 68
+execute if data storage flare:temp {"ord_char_1": "E"} run scoreboard players set pack_ascii_val __pack__vars__ 69
+execute if data storage flare:temp {"ord_char_1": "F"} run scoreboard players set pack_ascii_val __pack__vars__ 70
+execute if data storage flare:temp {"ord_char_1": "G"} run scoreboard players set pack_ascii_val __pack__vars__ 71
+execute if data storage flare:temp {"ord_char_1": "H"} run scoreboard players set pack_ascii_val __pack__vars__ 72
+execute if data storage flare:temp {"ord_char_1": "I"} run scoreboard players set pack_ascii_val __pack__vars__ 73
+execute if data storage flare:temp {"ord_char_1": "J"} run scoreboard players set pack_ascii_val __pack__vars__ 74
+execute if data storage flare:temp {"ord_char_1": "K"} run scoreboard players set pack_ascii_val __pack__vars__ 75
+execute if data storage flare:temp {"ord_char_1": "L"} run scoreboard players set pack_ascii_val __pack__vars__ 76
+execute if data storage flare:temp {"ord_char_1": "M"} run scoreboard players set pack_ascii_val __pack__vars__ 77
+execute if data storage flare:temp {"ord_char_1": "N"} run scoreboard players set pack_ascii_val __pack__vars__ 78
+execute if data storage flare:temp {"ord_char_1": "O"} run scoreboard players set pack_ascii_val __pack__vars__ 79
+execute if data storage flare:temp {"ord_char_1": "P"} run scoreboard players set pack_ascii_val __pack__vars__ 80
+execute if data storage flare:temp {"ord_char_1": "Q"} run scoreboard players set pack_ascii_val __pack__vars__ 81
+execute if data storage flare:temp {"ord_char_1": "R"} run scoreboard players set pack_ascii_val __pack__vars__ 82
+execute if data storage flare:temp {"ord_char_1": "S"} run scoreboard players set pack_ascii_val __pack__vars__ 83
+execute if data storage flare:temp {"ord_char_1": "T"} run scoreboard players set pack_ascii_val __pack__vars__ 84
+execute if data storage flare:temp {"ord_char_1": "U"} run scoreboard players set pack_ascii_val __pack__vars__ 85
+execute if data storage flare:temp {"ord_char_1": "V"} run scoreboard players set pack_ascii_val __pack__vars__ 86
+execute if data storage flare:temp {"ord_char_1": "W"} run scoreboard players set pack_ascii_val __pack__vars__ 87
+execute if data storage flare:temp {"ord_char_1": "X"} run scoreboard players set pack_ascii_val __pack__vars__ 88
+execute if data storage flare:temp {"ord_char_1": "Y"} run scoreboard players set pack_ascii_val __pack__vars__ 89
+execute if data storage flare:temp {"ord_char_1": "Z"} run scoreboard players set pack_ascii_val __pack__vars__ 90
+execute if data storage flare:temp {"ord_char_1": "!"} run scoreboard players set pack_ascii_val __pack__vars__ 33
+execute if data storage flare:temp {"ord_char_1": "\""} run scoreboard players set pack_ascii_val __pack__vars__ 34
+execute if data storage flare:temp {"ord_char_1": "#"} run scoreboard players set pack_ascii_val __pack__vars__ 35
+execute if data storage flare:temp {"ord_char_1": "$"} run scoreboard players set pack_ascii_val __pack__vars__ 36
+execute if data storage flare:temp {"ord_char_1": "%"} run scoreboard players set pack_ascii_val __pack__vars__ 37
+execute if data storage flare:temp {"ord_char_1": "&"} run scoreboard players set pack_ascii_val __pack__vars__ 38
+execute if data storage flare:temp {"ord_char_1": "'"} run scoreboard players set pack_ascii_val __pack__vars__ 39
+execute if data storage flare:temp {"ord_char_1": "("} run scoreboard players set pack_ascii_val __pack__vars__ 40
+execute if data storage flare:temp {"ord_char_1": ")"} run scoreboard players set pack_ascii_val __pack__vars__ 41
+execute if data storage flare:temp {"ord_char_1": "*"} run scoreboard players set pack_ascii_val __pack__vars__ 42
+execute if data storage flare:temp {"ord_char_1": "+"} run scoreboard players set pack_ascii_val __pack__vars__ 43
+execute if data storage flare:temp {"ord_char_1": ","} run scoreboard players set pack_ascii_val __pack__vars__ 44
+execute if data storage flare:temp {"ord_char_1": "-"} run scoreboard players set pack_ascii_val __pack__vars__ 45
+execute if data storage flare:temp {"ord_char_1": "."} run scoreboard players set pack_ascii_val __pack__vars__ 46
+execute if data storage flare:temp {"ord_char_1": "/"} run scoreboard players set pack_ascii_val __pack__vars__ 47
+execute if data storage flare:temp {"ord_char_1": ":"} run scoreboard players set pack_ascii_val __pack__vars__ 58
+execute if data storage flare:temp {"ord_char_1": ";"} run scoreboard players set pack_ascii_val __pack__vars__ 59
+execute if data storage flare:temp {"ord_char_1": "<"} run scoreboard players set pack_ascii_val __pack__vars__ 60
+execute if data storage flare:temp {"ord_char_1": "="} run scoreboard players set pack_ascii_val __pack__vars__ 61
+execute if data storage flare:temp {"ord_char_1": ">"} run scoreboard players set pack_ascii_val __pack__vars__ 62
+execute if data storage flare:temp {"ord_char_1": "?"} run scoreboard players set pack_ascii_val __pack__vars__ 63
+execute if data storage flare:temp {"ord_char_1": "@"} run scoreboard players set pack_ascii_val __pack__vars__ 64
+execute if data storage flare:temp {"ord_char_1": "["} run scoreboard players set pack_ascii_val __pack__vars__ 91
+execute if data storage flare:temp {"ord_char_1": "\\"} run scoreboard players set pack_ascii_val __pack__vars__ 92
+execute if data storage flare:temp {"ord_char_1": "]"} run scoreboard players set pack_ascii_val __pack__vars__ 93
+execute if data storage flare:temp {"ord_char_1": "^"} run scoreboard players set pack_ascii_val __pack__vars__ 94
+execute if data storage flare:temp {"ord_char_1": "_"} run scoreboard players set pack_ascii_val __pack__vars__ 95
+execute if data storage flare:temp {"ord_char_1": "`"} run scoreboard players set pack_ascii_val __pack__vars__ 96
+execute if data storage flare:temp {"ord_char_1": "{"} run scoreboard players set pack_ascii_val __pack__vars__ 123
+execute if data storage flare:temp {"ord_char_1": "|"} run scoreboard players set pack_ascii_val __pack__vars__ 124
+execute if data storage flare:temp {"ord_char_1": "}"} run scoreboard players set pack_ascii_val __pack__vars__ 125
+execute if data storage flare:temp {"ord_char_1": "~"} run scoreboard players set pack_ascii_val __pack__vars__ 126
+execute if data storage flare:temp {"ord_char_1": " "} run scoreboard players set pack_ascii_val __pack__vars__ 32
+execute if data storage flare:temp {"ord_char_1": "	"} run scoreboard players set pack_ascii_val __pack__vars__ 9
 execute if data storage flare:temp {"ord_char_1": "
-"} run scoreboard players set pack:vars pack_ascii_val 10
-execute if data storage flare:temp {"ord_char_1": "
-"} run scoreboard players set pack:vars pack_ascii_val 13
-execute if data storage flare:temp {"ord_char_1": ""} run scoreboard players set pack:vars pack_ascii_val 11
-execute if data storage flare:temp {"ord_char_1": ""} run scoreboard players set pack:vars pack_ascii_val 12
+"} run scoreboard players set pack_ascii_val __pack__vars__ 10
+execute if data storage flare:temp {"ord_char_1": ""} run scoreboard players set pack_ascii_val __pack__vars__ 13
+execute if data storage flare:temp {"ord_char_1": ""} run scoreboard players set pack_ascii_val __pack__vars__ 11
+execute if data storage flare:temp {"ord_char_1": ""} run scoreboard players set pack_ascii_val __pack__vars__ 12
 ```
 
 :::
