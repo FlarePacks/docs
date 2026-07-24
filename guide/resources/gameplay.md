@@ -115,6 +115,13 @@ if is_raining:
 execute if predicate pack:is_raining run tellraw @a "Don't forget your umbrella!"
 ```
 
+```json [is_raining.json.json]
+{
+    "condition": "minecraft:weather_check",
+    "raining": true
+}
+```
+
 :::
 
 ## Enchantments

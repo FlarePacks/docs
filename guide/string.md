@@ -32,11 +32,11 @@ data modify storage pack:vars pack_a set value "hello_world"
 data modify storage pack:vars pack_b set value ""
 data modify storage pack:vars pack_b set value ""
 data modify storage pack:vars pack_b set string storage pack:vars pack_a 6 11
-data modify storage flare:temp !slice_2 set value ""
-data modify storage flare:temp !slice_2 set string storage pack:vars pack_a 6 11
+data modify storage flare:temp #slice_2 set value ""
+data modify storage flare:temp #slice_2 set string storage pack:vars pack_a 6 11
 data modify storage pack:__flare_temp__ __nbt_cmp set from storage pack:vars pack_b
-execute store success score !n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp !slice_2
-execute if score !n1 __pack__temp__ matches 0 run tellraw @a "Slicing matched!"
+execute store success score #n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #slice_2
+execute if score #n1 __pack__temp__ matches 0 run tellraw @a "Slicing matched!"
 ```
 
 :::
@@ -101,8 +101,8 @@ scoreboard objectives add __pack__temp__ dummy
 data modify storage pack:vars pack_chars set value "abc"
 data modify storage pack:vars pack_char_list set value []
 data modify storage flare:temp split_str_1 set from storage pack:vars pack_chars
-execute store result score !split_len_1 __pack__temp__ run data get storage flare:temp split_str_1
-execute if score !split_len_1 __pack__temp__ matches 1.. run function pack:___init__/split_char_0
+execute store result score #split_len_1 __pack__temp__ run data get storage flare:temp split_str_1
+execute if score #split_len_1 __pack__temp__ matches 1.. run function pack:___init__/split_char_0
 ```
 
 ```mcfunction [___init__/split_char_0.mcfunction]
@@ -110,8 +110,8 @@ data modify storage pack:vars pack_char_list append string storage flare:temp sp
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
 data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp split_str_1 1
 data modify storage flare:temp split_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
-scoreboard players remove !split_len_1 __pack__temp__ 1
-execute if score !split_len_1 __pack__temp__ matches 1.. run function pack:___init__/split_char_0
+scoreboard players remove #split_len_1 __pack__temp__ 1
+execute if score #split_len_1 __pack__temp__ matches 1.. run function pack:___init__/split_char_0
 ```
 
 :::
@@ -146,13 +146,13 @@ data modify storage pack:vars pack_combined set from storage pack:vars pack_dash
 data modify storage flare:temp join_delim_0 set from storage pack:vars pack_dash
 data modify storage pack:vars pack_combined set value ""
 data modify storage flare:temp join_seq_0 set from storage pack:vars pack_parts
-execute store result score !join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
-execute if score !join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
+execute store result score #join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
+execute if score #join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
 ```
 
 ```mcfunction [___init__/join_0.mcfunction]
 data modify storage flare:temp join_item_0 set from storage flare:temp join_seq_0[0]
-execute if score !join_len_0 __pack__temp__ matches 1 run data modify storage flare:temp join_delim_0 set value ""
+execute if score #join_len_0 __pack__temp__ matches 1 run data modify storage flare:temp join_delim_0 set value ""
 data modify storage pack:__flare_temp__ __strcat_1 set value {__strcat_address:"storage pack:vars pack_combined"}
 data modify storage pack:__flare_temp__ __strcat_1.__strcat_input1 set from storage pack:vars pack_combined
 data modify storage pack:__flare_temp__ __strcat_1.__strcat_input2 set from storage flare:temp join_item_0
@@ -162,8 +162,16 @@ data modify storage pack:__flare_temp__ __strcat_2.__strcat_input1 set from stor
 data modify storage pack:__flare_temp__ __strcat_2.__strcat_input2 set from storage flare:temp join_delim_0
 function __flare_stdlib__:__flare_strcat_2 with storage pack:__flare_temp__ __strcat_2
 data remove storage flare:temp join_seq_0[0]
-execute store result score !join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
-execute if score !join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
+execute store result score #join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
+execute if score #join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
+```
+
+```mcfunction [__flare_strcat_1.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
+```
+
+```mcfunction [__flare_strcat_2.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
 :::
@@ -202,40 +210,59 @@ data modify storage pack:vars pack_greeting set value "hello world, hello univer
 data modify storage flare:temp repl_str_1 set from storage pack:vars pack_greeting
 data modify storage flare:temp repl_old_1 set value "hello"
 data modify storage flare:temp repl_new_1 set value "goodbye"
-execute store result score !repl_olen_1 __pack__temp__ run data get storage flare:temp repl_old_1
+execute store result score #repl_olen_1 __pack__temp__ run data get storage flare:temp repl_old_1
 data modify storage pack:vars pack_greeting set value ""
-scoreboard players set !repl_limit_1 __pack__temp__ -1
-scoreboard players set !repl_match_1 __pack__temp__ 0
-execute store result score !repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
-execute if score !repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
+scoreboard players set #repl_limit_1 __pack__temp__ -1
+scoreboard players set #repl_match_1 __pack__temp__ 0
+execute store result score #repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
+execute if score #repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
 ```
 
 ```mcfunction [___init__/repl_0.mcfunction]
-execute store result storage pack:__flare_temp__ __slice_args_3.stop int 1 run scoreboard players get !repl_olen_1 __pack__temp__
+execute store result storage pack:__flare_temp__ __slice_args_3.stop int 1 run scoreboard players get #repl_olen_1 __pack__temp__
 function __flare_stdlib__:__flare_slice_3 with storage pack:__flare_temp__ __slice_args_3
-scoreboard players set !repl_match_1 __pack__temp__ 1
+scoreboard players set #repl_match_1 __pack__temp__ 1
 data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp repl_slice_1
-execute store success score !n4 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp repl_old_1
-execute if score !n4 __pack__temp__ matches 0 run scoreboard players set !repl_match_1 __pack__temp__ 0
-execute if score !repl_limit_1 __pack__temp__ matches 0 if score !repl_match_1 __pack__temp__ matches 0 run scoreboard players set !repl_match_1 __pack__temp__ 1
-execute if score !repl_match_1 __pack__temp__ matches 0 run scoreboard players remove !repl_limit_1 __pack__temp__ 1
-execute if score !repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5 set value {__strcat_address:"storage pack:vars pack_greeting"}
-execute if score !repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input1 set from storage pack:vars pack_greeting
-execute if score !repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input2 set from storage flare:temp repl_new_1
-execute if score !repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_strcat_5 with storage pack:__flare_temp__ __strcat_5
-execute if score !repl_match_1 __pack__temp__ matches 0 store result storage pack:__flare_temp__ __slice_args_7.start int 1 run scoreboard players get !repl_olen_1 __pack__temp__
-execute if score !repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_slice_7 with storage pack:__flare_temp__ __slice_args_7
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set value ""
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set string storage flare:temp repl_str_1 0 1
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9 set value {__strcat_address:"storage pack:vars pack_greeting"}
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input1 set from storage pack:vars pack_greeting
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input2 set from storage flare:temp repl_char_1
-execute if score !repl_match_1 __pack__temp__ matches 1 run function __flare_stdlib__:__flare_strcat_9 with storage pack:__flare_temp__ __strcat_9
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp repl_str_1 1
-execute if score !repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score !repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
-execute if score !repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
+execute store success score #n4 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp repl_old_1
+execute if score #n4 __pack__temp__ matches 0 run scoreboard players set #repl_match_1 __pack__temp__ 0
+execute if score #repl_limit_1 __pack__temp__ matches 0 if score #repl_match_1 __pack__temp__ matches 0 run scoreboard players set #repl_match_1 __pack__temp__ 1
+execute if score #repl_match_1 __pack__temp__ matches 0 run scoreboard players remove #repl_limit_1 __pack__temp__ 1
+execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5 set value {__strcat_address:"storage pack:vars pack_greeting"}
+execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input1 set from storage pack:vars pack_greeting
+execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input2 set from storage flare:temp repl_new_1
+execute if score #repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_strcat_5 with storage pack:__flare_temp__ __strcat_5
+execute if score #repl_match_1 __pack__temp__ matches 0 store result storage pack:__flare_temp__ __slice_args_7.start int 1 run scoreboard players get #repl_olen_1 __pack__temp__
+execute if score #repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_slice_7 with storage pack:__flare_temp__ __slice_args_7
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set value ""
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set string storage flare:temp repl_str_1 0 1
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9 set value {__strcat_address:"storage pack:vars pack_greeting"}
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input1 set from storage pack:vars pack_greeting
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input2 set from storage flare:temp repl_char_1
+execute if score #repl_match_1 __pack__temp__ matches 1 run function __flare_stdlib__:__flare_strcat_9 with storage pack:__flare_temp__ __strcat_9
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp repl_str_1 1
+execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
+execute if score #repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
+```
+
+```mcfunction [__flare_slice_3.mcfunction]
+data modify storage flare:temp repl_slice_1 set value ""
+$data modify storage flare:temp repl_slice_1 set string storage flare:temp repl_str_1 0 $(stop)
+```
+
+```mcfunction [__flare_slice_7.mcfunction]
+data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+$data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp repl_str_1 $(start)
+data modify storage flare:temp repl_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
+```
+
+```mcfunction [__flare_strcat_5.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
+```
+
+```mcfunction [__flare_strcat_9.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
 :::
@@ -278,8 +305,8 @@ data modify storage pack:vars pack_word set value "hello"
 data modify storage pack:vars pack_reversed_word set from storage pack:vars pack_word
 data modify storage flare:temp rev_str_0 set from storage pack:vars pack_word
 data modify storage pack:vars pack_reversed_word set value ""
-execute store result score !rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
-execute if score !rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+execute store result score #rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
+execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
 ```
 
 ```mcfunction [___init__/rev_0.mcfunction]
@@ -292,8 +319,12 @@ function __flare_stdlib__:__flare_strcat with storage pack:__flare_temp__ __strc
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
 data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp rev_str_0 1
 data modify storage flare:temp rev_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score !rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
-execute if score !rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+execute store result score #rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
+execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+```
+
+```mcfunction [__flare_strcat.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
 :::
@@ -327,8 +358,8 @@ data modify storage pack:vars pack_title set value "Hello, World!"
 data modify storage pack:vars pack_slug set from storage pack:vars pack_title
 data modify storage flare:temp slugify_str_0 set from storage pack:vars pack_title
 data modify storage pack:vars pack_slug set value ""
-execute store result score !slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
-execute if score !slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
+execute store result score #slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
+execute if score #slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
 ```
 
 ```mcfunction [___init__/slugify_0.mcfunction]
@@ -399,8 +430,12 @@ function __flare_stdlib__:__flare_strcat_2 with storage pack:__flare_temp__ __st
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
 data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp slugify_str_0 1
 data modify storage flare:temp slugify_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score !slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
-execute if score !slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
+execute store result score #slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
+execute if score #slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
+```
+
+```mcfunction [__flare_strcat_2.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
 :::
@@ -430,41 +465,51 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_sentence set value "flare is awesome"
-data modify storage flare:temp !in_res_out_2 set value 0b
+data modify storage flare:temp #in_res_out_2 set value 0b
 data modify storage flare:temp find_str_4 set from storage pack:vars pack_sentence
 data modify storage flare:temp find_target_4 set value "flare"
-execute store result score !find_tlen_4 __pack__temp__ run data get storage flare:temp find_target_4
-execute store result score !find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
-scoreboard players set !find_match_4 __pack__temp__ 0
-scoreboard players set !c3 __pack__temp__ 0
-execute if score !find_slen_4 __pack__temp__ >= !find_tlen_4 __pack__temp__ run function pack:___init__/find_0
-execute if score !find_match_4 __pack__temp__ matches 1 run scoreboard players set !c3 __pack__temp__ -1
-execute if score !c3 __pack__temp__ matches 0.. run data modify storage flare:temp !in_res_out_2 set value 1b
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp !in_res_out_2
-execute store success score !n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value 0
-execute if score !n1 __pack__temp__ matches 1.. run tellraw @a "Found flare!"
-execute store result score !temp_12 __pack__temp__ run data get storage pack:vars pack_sentence
-scoreboard players remove !temp_12 __pack__temp__ 7
-execute store result storage pack:__flare_temp__ __slice_args_13.start int 1 run scoreboard players get !temp_12 __pack__temp__
+execute store result score #find_tlen_4 __pack__temp__ run data get storage flare:temp find_target_4
+execute store result score #find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
+scoreboard players set #find_match_4 __pack__temp__ 0
+scoreboard players set #c3 __pack__temp__ 0
+execute if score #find_slen_4 __pack__temp__ >= #find_tlen_4 __pack__temp__ run function pack:___init__/find_0
+execute if score #find_match_4 __pack__temp__ matches 1 run scoreboard players set #c3 __pack__temp__ -1
+execute if score #c3 __pack__temp__ matches 0.. run data modify storage flare:temp #in_res_out_2 set value 1b
+data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #in_res_out_2
+execute store success score #n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value 0
+execute if score #n1 __pack__temp__ matches 1.. run tellraw @a "Found flare!"
+execute store result score #temp_12 __pack__temp__ run data get storage pack:vars pack_sentence
+scoreboard players remove #temp_12 __pack__temp__ 7
+execute store result storage pack:__flare_temp__ __slice_args_13.start int 1 run scoreboard players get #temp_12 __pack__temp__
 function __flare_stdlib__:__flare_slice_13 with storage pack:__flare_temp__ __slice_args_13
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp !slice_10
-execute store success score !n9 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value "awesome"
-execute if score !n9 __pack__temp__ matches 0 run tellraw @a "Awesome!"
+data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #slice_10
+execute store success score #n9 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value "awesome"
+execute if score #n9 __pack__temp__ matches 0 run tellraw @a "Awesome!"
 ```
 
 ```mcfunction [___init__/find_0.mcfunction]
-execute store result storage pack:__flare_temp__ __slice_args_6.stop int 1 run scoreboard players get !find_tlen_4 __pack__temp__
+execute store result storage pack:__flare_temp__ __slice_args_6.stop int 1 run scoreboard players get #find_tlen_4 __pack__temp__
 function __flare_stdlib__:__flare_slice_6 with storage pack:__flare_temp__ __slice_args_6
-scoreboard players set !find_match_4 __pack__temp__ 1
+scoreboard players set #find_match_4 __pack__temp__ 1
 data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_slice_4
-execute store success score !n7 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_target_4
-execute if score !n7 __pack__temp__ matches 0 run scoreboard players set !find_match_4 __pack__temp__ 0
-execute if score !find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-execute if score !find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp find_str_4 1
-execute if score !find_match_4 __pack__temp__ matches 1 run data modify storage flare:temp find_str_4 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute if score !find_match_4 __pack__temp__ matches 1 run scoreboard players add !c3 __pack__temp__ 1
-execute store result score !find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
-execute if score !find_match_4 __pack__temp__ matches 1 if score !find_slen_4 __pack__temp__ >= !find_tlen_4 __pack__temp__ run function pack:___init__/find_0
+execute store success score #n7 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_target_4
+execute if score #n7 __pack__temp__ matches 0 run scoreboard players set #find_match_4 __pack__temp__ 0
+execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp find_str_4 1
+execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage flare:temp find_str_4 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute if score #find_match_4 __pack__temp__ matches 1 run scoreboard players add #c3 __pack__temp__ 1
+execute store result score #find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
+execute if score #find_match_4 __pack__temp__ matches 1 if score #find_slen_4 __pack__temp__ >= #find_tlen_4 __pack__temp__ run function pack:___init__/find_0
+```
+
+```mcfunction [__flare_slice_13.mcfunction]
+data modify storage flare:temp #slice_10 set value ""
+$data modify storage flare:temp #slice_10 set string storage pack:vars pack_sentence $(start)
+```
+
+```mcfunction [__flare_slice_6.mcfunction]
+data modify storage flare:temp find_slice_4 set value ""
+$data modify storage flare:temp find_slice_4 set string storage flare:temp find_str_4 0 $(stop)
 ```
 
 :::
@@ -495,85 +540,85 @@ scoreboard objectives add __pack__temp__ dummy
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_username set value "player123"
 data modify storage flare:temp isalnum_str_0 set from storage pack:vars pack_username
-scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute store result score !isalnum_tlen_0 __pack__temp__ run data get storage flare:temp isalnum_str_0
-execute if score !isalnum_tlen_0 __pack__temp__ matches 0 run scoreboard players set !isalnum_match_0 __pack__temp__ 0
-execute if score !isalnum_match_0 __pack__temp__ matches 1 if score !isalnum_tlen_0 __pack__temp__ matches 1.. run function pack:___init__/isalnum_0
-scoreboard players operation !isalnum_out_3 __pack__temp__ = !isalnum_match_0 __pack__temp__
-execute if score !isalnum_out_3 __pack__temp__ matches -2147483648..2147483647 run tellraw @a "Valid username format"
+scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute store result score #isalnum_tlen_0 __pack__temp__ run data get storage flare:temp isalnum_str_0
+execute if score #isalnum_tlen_0 __pack__temp__ matches 0 run scoreboard players set #isalnum_match_0 __pack__temp__ 0
+execute if score #isalnum_match_0 __pack__temp__ matches 1 if score #isalnum_tlen_0 __pack__temp__ matches 1.. run function pack:___init__/isalnum_0
+scoreboard players operation #isalnum_out_3 __pack__temp__ = #isalnum_match_0 __pack__temp__
+execute if score #isalnum_out_3 __pack__temp__ matches -2147483648..2147483647 run tellraw @a "Valid username format"
 ```
 
 ```mcfunction [___init__/isalnum_0.mcfunction]
 data modify storage flare:temp isalnum_char_0 set value ""
 data modify storage flare:temp isalnum_char_0 set string storage flare:temp isalnum_str_0 0 1
-scoreboard players set !isalnum_match_0 __pack__temp__ 0
-execute if data storage flare:temp {"isalnum_char_0": "a"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "b"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "c"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "d"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "e"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "f"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "g"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "h"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "i"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "j"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "k"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "l"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "m"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "n"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "o"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "p"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "q"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "r"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "s"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "t"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "u"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "v"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "w"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "x"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "y"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "z"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "A"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "B"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "C"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "D"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "E"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "F"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "G"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "H"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "I"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "J"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "K"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "L"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "M"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "N"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "O"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "P"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "Q"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "R"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "S"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "T"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "U"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "V"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "W"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "X"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "Y"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "Z"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "0"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "1"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "2"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "3"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "4"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "5"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "6"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "7"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "8"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if data storage flare:temp {"isalnum_char_0": "9"} run scoreboard players set !isalnum_match_0 __pack__temp__ 1
-execute if score !isalnum_match_0 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-execute if score !isalnum_match_0 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp isalnum_str_0 1
-execute if score !isalnum_match_0 __pack__temp__ matches 1 run data modify storage flare:temp isalnum_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score !isalnum_tlen_0 __pack__temp__ run data get storage flare:temp isalnum_str_0
-execute if score !isalnum_match_0 __pack__temp__ matches 1 if score !isalnum_tlen_0 __pack__temp__ matches 1.. run function pack:___init__/isalnum_0
+scoreboard players set #isalnum_match_0 __pack__temp__ 0
+execute if data storage flare:temp {"isalnum_char_0": "a"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "b"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "c"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "d"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "e"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "f"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "g"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "h"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "i"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "j"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "k"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "l"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "m"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "n"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "o"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "p"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "q"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "r"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "s"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "t"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "u"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "v"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "w"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "x"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "y"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "z"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "A"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "B"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "C"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "D"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "E"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "F"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "G"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "H"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "I"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "J"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "K"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "L"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "M"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "N"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "O"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "P"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "Q"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "R"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "S"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "T"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "U"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "V"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "W"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "X"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "Y"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "Z"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "0"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "1"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "2"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "3"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "4"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "5"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "6"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "7"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "8"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if data storage flare:temp {"isalnum_char_0": "9"} run scoreboard players set #isalnum_match_0 __pack__temp__ 1
+execute if score #isalnum_match_0 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+execute if score #isalnum_match_0 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp isalnum_str_0 1
+execute if score #isalnum_match_0 __pack__temp__ matches 1 run data modify storage flare:temp isalnum_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #isalnum_tlen_0 __pack__temp__ run data get storage flare:temp isalnum_str_0
+execute if score #isalnum_match_0 __pack__temp__ matches 1 if score #isalnum_tlen_0 __pack__temp__ matches 1.. run function pack:___init__/isalnum_0
 ```
 
 :::
