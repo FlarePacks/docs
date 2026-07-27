@@ -142,35 +142,34 @@ scoreboard objectives add __pack__temp__ dummy
 data modify storage pack:vars pack_parts append value "apple"
 data modify storage pack:vars pack_parts append value "banana"
 data modify storage pack:vars pack_dash set value "-"
-data modify storage pack:vars pack_combined set from storage pack:vars pack_dash
-data modify storage flare:temp join_delim_0 set from storage pack:vars pack_dash
+data modify storage flare:temp join_delim_1 set from storage pack:vars pack_dash
 data modify storage pack:vars pack_combined set value ""
-data modify storage flare:temp join_seq_0 set from storage pack:vars pack_parts
-execute store result score #join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
-execute if score #join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
+data modify storage flare:temp join_seq_1 set from storage pack:vars pack_parts
+execute store result score #join_len_1 __pack__temp__ run data get storage flare:temp join_seq_1
+execute if score #join_len_1 __pack__temp__ matches 1.. run function pack:___init__/join_0
 ```
 
 ```mcfunction [___init__/join_0.mcfunction]
-data modify storage flare:temp join_item_0 set from storage flare:temp join_seq_0[0]
-execute if score #join_len_0 __pack__temp__ matches 1 run data modify storage flare:temp join_delim_0 set value ""
-data modify storage pack:__flare_temp__ __strcat_1 set value {__strcat_address:"storage pack:vars pack_combined"}
-data modify storage pack:__flare_temp__ __strcat_1.__strcat_input1 set from storage pack:vars pack_combined
-data modify storage pack:__flare_temp__ __strcat_1.__strcat_input2 set from storage flare:temp join_item_0
-function __flare_stdlib__:__flare_strcat_1 with storage pack:__flare_temp__ __strcat_1
+data modify storage flare:temp join_item_1 set from storage flare:temp join_seq_1[0]
+execute if score #join_len_1 __pack__temp__ matches 1 run data modify storage flare:temp join_delim_1 set value ""
 data modify storage pack:__flare_temp__ __strcat_2 set value {__strcat_address:"storage pack:vars pack_combined"}
 data modify storage pack:__flare_temp__ __strcat_2.__strcat_input1 set from storage pack:vars pack_combined
-data modify storage pack:__flare_temp__ __strcat_2.__strcat_input2 set from storage flare:temp join_delim_0
+data modify storage pack:__flare_temp__ __strcat_2.__strcat_input2 set from storage flare:temp join_item_1
 function __flare_stdlib__:__flare_strcat_2 with storage pack:__flare_temp__ __strcat_2
-data remove storage flare:temp join_seq_0[0]
-execute store result score #join_len_0 __pack__temp__ run data get storage flare:temp join_seq_0
-execute if score #join_len_0 __pack__temp__ matches 1.. run function pack:___init__/join_0
-```
-
-```mcfunction [__flare_strcat_1.mcfunction]
-$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
+data modify storage pack:__flare_temp__ __strcat_3 set value {__strcat_address:"storage pack:vars pack_combined"}
+data modify storage pack:__flare_temp__ __strcat_3.__strcat_input1 set from storage pack:vars pack_combined
+data modify storage pack:__flare_temp__ __strcat_3.__strcat_input2 set from storage flare:temp join_delim_1
+function __flare_stdlib__:__flare_strcat_3 with storage pack:__flare_temp__ __strcat_3
+data remove storage flare:temp join_seq_1[0]
+execute store result score #join_len_1 __pack__temp__ run data get storage flare:temp join_seq_1
+execute if score #join_len_1 __pack__temp__ matches 1.. run function pack:___init__/join_0
 ```
 
 ```mcfunction [__flare_strcat_2.mcfunction]
+$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
+```
+
+```mcfunction [__flare_strcat_3.mcfunction]
 $data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
@@ -302,25 +301,24 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_word set value "hello"
-data modify storage pack:vars pack_reversed_word set from storage pack:vars pack_word
-data modify storage flare:temp rev_str_0 set from storage pack:vars pack_word
+data modify storage flare:temp rev_str_1 set from storage pack:vars pack_word
 data modify storage pack:vars pack_reversed_word set value ""
-execute store result score #rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
-execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+execute store result score #rev_len_1 __pack__temp__ run data get storage flare:temp rev_str_1
+execute if score #rev_len_1 __pack__temp__ matches 1.. run function pack:___init__/rev_0
 ```
 
 ```mcfunction [___init__/rev_0.mcfunction]
-data modify storage flare:temp rev_char_0 set value ""
-data modify storage flare:temp rev_char_0 set string storage flare:temp rev_str_0 0 1
+data modify storage flare:temp rev_char_1 set value ""
+data modify storage flare:temp rev_char_1 set string storage flare:temp rev_str_1 0 1
 data modify storage pack:__flare_temp__ __strcat set value {__strcat_address:"storage pack:vars pack_reversed_word"}
 data modify storage pack:__flare_temp__ __strcat.__strcat_input2 set from storage pack:vars pack_reversed_word
-data modify storage pack:__flare_temp__ __strcat.__strcat_input1 set from storage flare:temp rev_char_0
+data modify storage pack:__flare_temp__ __strcat.__strcat_input1 set from storage flare:temp rev_char_1
 function __flare_stdlib__:__flare_strcat with storage pack:__flare_temp__ __strcat
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp rev_str_0 1
-data modify storage flare:temp rev_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score #rev_len_0 __pack__temp__ run data get storage flare:temp rev_str_0
-execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp rev_str_1 1
+data modify storage flare:temp rev_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #rev_len_1 __pack__temp__ run data get storage flare:temp rev_str_1
+execute if score #rev_len_1 __pack__temp__ matches 1.. run function pack:___init__/rev_0
 ```
 
 ```mcfunction [__flare_strcat.mcfunction]
@@ -355,86 +353,85 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_title set value "Hello, World!"
-data modify storage pack:vars pack_slug set from storage pack:vars pack_title
-data modify storage flare:temp slugify_str_0 set from storage pack:vars pack_title
+data modify storage flare:temp slugify_str_1 set from storage pack:vars pack_title
 data modify storage pack:vars pack_slug set value ""
-execute store result score #slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
-execute if score #slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
+execute store result score #slugify_len_1 __pack__temp__ run data get storage flare:temp slugify_str_1
+execute if score #slugify_len_1 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
 ```
 
 ```mcfunction [___init__/slugify_0.mcfunction]
-data modify storage flare:temp slugify_char_0 set value ""
-data modify storage flare:temp slugify_char_0 set string storage flare:temp slugify_str_0 0 1
-execute if data storage flare:temp {"slugify_char_0": "A"} run data modify storage flare:temp slugify_char_0 set value "a"
-execute if data storage flare:temp {"slugify_char_0": "B"} run data modify storage flare:temp slugify_char_0 set value "b"
-execute if data storage flare:temp {"slugify_char_0": "C"} run data modify storage flare:temp slugify_char_0 set value "c"
-execute if data storage flare:temp {"slugify_char_0": "D"} run data modify storage flare:temp slugify_char_0 set value "d"
-execute if data storage flare:temp {"slugify_char_0": "E"} run data modify storage flare:temp slugify_char_0 set value "e"
-execute if data storage flare:temp {"slugify_char_0": "F"} run data modify storage flare:temp slugify_char_0 set value "f"
-execute if data storage flare:temp {"slugify_char_0": "G"} run data modify storage flare:temp slugify_char_0 set value "g"
-execute if data storage flare:temp {"slugify_char_0": "H"} run data modify storage flare:temp slugify_char_0 set value "h"
-execute if data storage flare:temp {"slugify_char_0": "I"} run data modify storage flare:temp slugify_char_0 set value "i"
-execute if data storage flare:temp {"slugify_char_0": "J"} run data modify storage flare:temp slugify_char_0 set value "j"
-execute if data storage flare:temp {"slugify_char_0": "K"} run data modify storage flare:temp slugify_char_0 set value "k"
-execute if data storage flare:temp {"slugify_char_0": "L"} run data modify storage flare:temp slugify_char_0 set value "l"
-execute if data storage flare:temp {"slugify_char_0": "M"} run data modify storage flare:temp slugify_char_0 set value "m"
-execute if data storage flare:temp {"slugify_char_0": "N"} run data modify storage flare:temp slugify_char_0 set value "n"
-execute if data storage flare:temp {"slugify_char_0": "O"} run data modify storage flare:temp slugify_char_0 set value "o"
-execute if data storage flare:temp {"slugify_char_0": "P"} run data modify storage flare:temp slugify_char_0 set value "p"
-execute if data storage flare:temp {"slugify_char_0": "Q"} run data modify storage flare:temp slugify_char_0 set value "q"
-execute if data storage flare:temp {"slugify_char_0": "R"} run data modify storage flare:temp slugify_char_0 set value "r"
-execute if data storage flare:temp {"slugify_char_0": "S"} run data modify storage flare:temp slugify_char_0 set value "s"
-execute if data storage flare:temp {"slugify_char_0": "T"} run data modify storage flare:temp slugify_char_0 set value "t"
-execute if data storage flare:temp {"slugify_char_0": "U"} run data modify storage flare:temp slugify_char_0 set value "u"
-execute if data storage flare:temp {"slugify_char_0": "V"} run data modify storage flare:temp slugify_char_0 set value "v"
-execute if data storage flare:temp {"slugify_char_0": "W"} run data modify storage flare:temp slugify_char_0 set value "w"
-execute if data storage flare:temp {"slugify_char_0": "X"} run data modify storage flare:temp slugify_char_0 set value "x"
-execute if data storage flare:temp {"slugify_char_0": "Y"} run data modify storage flare:temp slugify_char_0 set value "y"
-execute if data storage flare:temp {"slugify_char_0": "Z"} run data modify storage flare:temp slugify_char_0 set value "z"
-execute if data storage flare:temp {"slugify_char_0": " "} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "@"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "*"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "&"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "^"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "%"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "$"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "#"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "@"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "!"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "~"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "`"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "+"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "="} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "|"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "\\"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": ":"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": ";"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "\""} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "'"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "<"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": ">"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": ","} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "."} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "?"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "/"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "("} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": ")"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "["} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "]"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "{"} run data modify storage flare:temp slugify_char_0 set value "-"
-execute if data storage flare:temp {"slugify_char_0": "}"} run data modify storage flare:temp slugify_char_0 set value "-"
-data modify storage pack:__flare_temp__ __strcat_2 set value {__strcat_address:"storage pack:vars pack_slug"}
-data modify storage pack:__flare_temp__ __strcat_2.__strcat_input1 set from storage pack:vars pack_slug
-data modify storage pack:__flare_temp__ __strcat_2.__strcat_input2 set from storage flare:temp slugify_char_0
-function __flare_stdlib__:__flare_strcat_2 with storage pack:__flare_temp__ __strcat_2
+data modify storage flare:temp slugify_char_1 set value ""
+data modify storage flare:temp slugify_char_1 set string storage flare:temp slugify_str_1 0 1
+execute if data storage flare:temp {"slugify_char_1": "A"} run data modify storage flare:temp slugify_char_1 set value "a"
+execute if data storage flare:temp {"slugify_char_1": "B"} run data modify storage flare:temp slugify_char_1 set value "b"
+execute if data storage flare:temp {"slugify_char_1": "C"} run data modify storage flare:temp slugify_char_1 set value "c"
+execute if data storage flare:temp {"slugify_char_1": "D"} run data modify storage flare:temp slugify_char_1 set value "d"
+execute if data storage flare:temp {"slugify_char_1": "E"} run data modify storage flare:temp slugify_char_1 set value "e"
+execute if data storage flare:temp {"slugify_char_1": "F"} run data modify storage flare:temp slugify_char_1 set value "f"
+execute if data storage flare:temp {"slugify_char_1": "G"} run data modify storage flare:temp slugify_char_1 set value "g"
+execute if data storage flare:temp {"slugify_char_1": "H"} run data modify storage flare:temp slugify_char_1 set value "h"
+execute if data storage flare:temp {"slugify_char_1": "I"} run data modify storage flare:temp slugify_char_1 set value "i"
+execute if data storage flare:temp {"slugify_char_1": "J"} run data modify storage flare:temp slugify_char_1 set value "j"
+execute if data storage flare:temp {"slugify_char_1": "K"} run data modify storage flare:temp slugify_char_1 set value "k"
+execute if data storage flare:temp {"slugify_char_1": "L"} run data modify storage flare:temp slugify_char_1 set value "l"
+execute if data storage flare:temp {"slugify_char_1": "M"} run data modify storage flare:temp slugify_char_1 set value "m"
+execute if data storage flare:temp {"slugify_char_1": "N"} run data modify storage flare:temp slugify_char_1 set value "n"
+execute if data storage flare:temp {"slugify_char_1": "O"} run data modify storage flare:temp slugify_char_1 set value "o"
+execute if data storage flare:temp {"slugify_char_1": "P"} run data modify storage flare:temp slugify_char_1 set value "p"
+execute if data storage flare:temp {"slugify_char_1": "Q"} run data modify storage flare:temp slugify_char_1 set value "q"
+execute if data storage flare:temp {"slugify_char_1": "R"} run data modify storage flare:temp slugify_char_1 set value "r"
+execute if data storage flare:temp {"slugify_char_1": "S"} run data modify storage flare:temp slugify_char_1 set value "s"
+execute if data storage flare:temp {"slugify_char_1": "T"} run data modify storage flare:temp slugify_char_1 set value "t"
+execute if data storage flare:temp {"slugify_char_1": "U"} run data modify storage flare:temp slugify_char_1 set value "u"
+execute if data storage flare:temp {"slugify_char_1": "V"} run data modify storage flare:temp slugify_char_1 set value "v"
+execute if data storage flare:temp {"slugify_char_1": "W"} run data modify storage flare:temp slugify_char_1 set value "w"
+execute if data storage flare:temp {"slugify_char_1": "X"} run data modify storage flare:temp slugify_char_1 set value "x"
+execute if data storage flare:temp {"slugify_char_1": "Y"} run data modify storage flare:temp slugify_char_1 set value "y"
+execute if data storage flare:temp {"slugify_char_1": "Z"} run data modify storage flare:temp slugify_char_1 set value "z"
+execute if data storage flare:temp {"slugify_char_1": " "} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "@"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "*"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "&"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "^"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "%"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "$"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "#"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "@"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "!"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "~"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "`"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "+"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "="} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "|"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "\\"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": ":"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": ";"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "\""} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "'"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "<"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": ">"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": ","} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "."} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "?"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "/"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "("} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": ")"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "["} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "]"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "{"} run data modify storage flare:temp slugify_char_1 set value "-"
+execute if data storage flare:temp {"slugify_char_1": "}"} run data modify storage flare:temp slugify_char_1 set value "-"
+data modify storage pack:__flare_temp__ __strcat_3 set value {__strcat_address:"storage pack:vars pack_slug"}
+data modify storage pack:__flare_temp__ __strcat_3.__strcat_input1 set from storage pack:vars pack_slug
+data modify storage pack:__flare_temp__ __strcat_3.__strcat_input2 set from storage flare:temp slugify_char_1
+function __flare_stdlib__:__flare_strcat_3 with storage pack:__flare_temp__ __strcat_3
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp slugify_str_0 1
-data modify storage flare:temp slugify_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score #slugify_len_0 __pack__temp__ run data get storage flare:temp slugify_str_0
-execute if score #slugify_len_0 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
+data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp slugify_str_1 1
+data modify storage flare:temp slugify_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #slugify_len_1 __pack__temp__ run data get storage flare:temp slugify_str_1
+execute if score #slugify_len_1 __pack__temp__ matches 1.. run function pack:___init__/slugify_0
 ```
 
-```mcfunction [__flare_strcat_2.mcfunction]
+```mcfunction [__flare_strcat_3.mcfunction]
 $data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
 ```
 
