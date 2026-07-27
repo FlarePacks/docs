@@ -198,7 +198,6 @@ y = x
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__vars__ dummy
-scoreboard objectives add __pack__temp__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]

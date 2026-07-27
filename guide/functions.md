@@ -200,7 +200,6 @@ scoreboard players set #_2 __pack__constant__ 2
 scoreboard players operation pack_calculate_ret __pack__vars__ = calculate_a __pack__vars__
 scoreboard players operation pack_calculate_ret __pack__vars__ *= #_2 __pack__constant__
 scoreboard players add pack_calculate_ret __pack__vars__ 10
-scoreboard players operation pack_calculate_ret __pack__vars__ = pack_calculate_ret __pack__vars__
 ```
 
 :::
@@ -342,9 +341,7 @@ scoreboard objectives add __pack__temp__ dummy
 execute if score countdown_n __pack__vars__ matches ..0 run return 1
 say Counting down!
 scoreboard players remove countdown_n __pack__vars__ 1
-scoreboard players operation countdown_n __pack__vars__ = countdown_n __pack__vars__
 function pack:countdown
-data modify storage pack:__flare_temp__ !ret0 set from storage pack:__flare_returns__ pack_countdown
 ```
 
 :::
@@ -610,10 +607,13 @@ name = nbtstr("flare")
 length = len(name) # Stored dynamically in a scoreboard objective
 ```
 
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__temp__ dummy
+```
+
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_name set value "flare"
-data modify storage pack:vars pack_length set from storage pack:vars pack_name
-execute store result score storage pack:vars pack_length run data get storage pack:vars pack_name
+execute store result score pack_length __pack__vars__ run data get storage pack:vars pack_name
 ```
 
 :::
