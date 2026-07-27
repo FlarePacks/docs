@@ -82,7 +82,10 @@ def compile_python_snippet(code: str) -> tuple[list[tuple[str, str]], list[tuple
             _, path = k.split(":", 1)
         else:
             path = k
-        tab_label = f"{path.split('/')[-1]}.json" if "/" in path else f"{path}.json"
+        filename = path.split("/")[-1]
+        if not filename.endswith(".json"):
+            filename = f"{filename}.json"
+        tab_label = filename
         content = json.dumps(json_obj, indent=4)
         json_tabs.append((tab_label, content))
 

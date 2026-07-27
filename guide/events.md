@@ -21,7 +21,7 @@ advancement revoke @s only pack:events/on_cow_hit_player_hurt_entity
 tellraw @a "You hit a cow!"
 ```
 
-```json [on_cow_hit_player_hurt_entity.json.json]
+```json [on_cow_hit_player_hurt_entity.json]
 {
     "criteria": {
         "requirement": {
@@ -79,7 +79,7 @@ def on_stick_use():
 tellraw @a "You used a stick!"
 ```
 
-```json [on_stick_use_using_item.json.json]
+```json [on_stick_use_using_item.json]
 {
     "criteria": {
         "requirement": {
@@ -125,7 +125,7 @@ tellraw @a "pack:events/my_tick_tick"
 advancement revoke @a only pack:events/my_tick_tick
 ```
 
-```json [my_tick_tick.json.json]
+```json [my_tick_tick.json]
 {
     "criteria": {
         "requirement": {

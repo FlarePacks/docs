@@ -329,21 +329,23 @@ selector("@e[type=armor_stand, tag=my_tag]")
 ```
 *(Note: Flare is smart enough to differentiate between Python decorators like `@lazify` and selectors like `@a` by checking if they are placed before a definition!)*
 
-### NBT Literals
+### NBT Type Suffix Literals & Inline `nbt{}` Compounds
 
-Instead of constructing complex nested dictionaries for NBT data or writing string literals, Flare allows you to write raw SNBT directly in your code using `nbt{}` or `nbt[]`:
+Flare allows writing Minecraft NBT type suffixes directly on numeric literals (`1b`, `500s`, `1000000L`, `3.14f`, `2.0d`) and inline `nbt{...}` compound literals with unquoted keys:
 
 ```python
 # You write:
-tag = nbt{display: {Name: '"My Item"'}}
-arr = nbt[1, 2, 3]
+val = 1b + 3b
+delay = 500s * 2
+tag = nbt{display: {Name: '"My Item"'}, CustomModelData: 7}
 
-# The preprocessor seamlessly converts this to:
-tag = interpolate_command('''{display: {Name: '"My Item"'}}''', locals(), globals())
-arr = interpolate_command('''[1, 2, 3]''', locals(), globals())
+# The preprocessor seamlessly converts numeric suffixes and unquoted keys to:
+val = snbt(1, "b") + snbt(3, "b")
+delay = snbt(500, "s") * 2
+tag = nbt({"display": {"Name": '"My Item"'}, "CustomModelData": 7})
 ```
 
-*(Note: These evaluate to raw, minified Python strings, acting as inline macros rather than persistent `nbt` objects.)*
+*(Note: `snbt` objects support full compile-time arithmetic, comparisons, bitwise operations, and format directly into unescaped SNBT string literals.)*
 
 ### Dynamic Block Coordinates
 

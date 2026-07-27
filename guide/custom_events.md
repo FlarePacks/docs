@@ -44,7 +44,7 @@ advancement revoke @s only pack:events/wand_right_click_super_shorthand_using_it
 tellraw @a "Used the wand!"
 ```
 
-```json [wand_right_click_using_item.json.json]
+```json [wand_right_click_using_item.json]
 {
     "criteria": {
         "requirement": {
@@ -66,7 +66,7 @@ tellraw @a "Used the wand!"
 }
 ```
 
-```json [wand_right_click_shorthand_using_item.json.json]
+```json [wand_right_click_shorthand_using_item.json]
 {
     "criteria": {
         "requirement": {
@@ -88,7 +88,7 @@ tellraw @a "Used the wand!"
 }
 ```
 
-```json [wand_right_click_super_shorthand_using_item.json.json]
+```json [wand_right_click_super_shorthand_using_item.json]
 {
     "criteria": {
         "requirement": {
@@ -139,7 +139,7 @@ execute unless score @s pack_wand_right_click_once_cd matches 2 run scoreboard p
 execute if score @s pack_wand_right_click_once_cd matches 2 run scoreboard players set @s pack_wand_right_click_once_cd 1
 ```
 
-```json [wand_right_click_once_tick_tick.json.json]
+```json [wand_right_click_once_tick_tick.json]
 {
     "criteria": {
         "requirement": {
@@ -153,7 +153,7 @@ execute if score @s pack_wand_right_click_once_cd matches 2 run scoreboard playe
 }
 ```
 
-```json [wand_right_click_once_using_item.json.json]
+```json [wand_right_click_once_using_item.json]
 {
     "criteria": {
         "requirement": {
@@ -212,7 +212,7 @@ give @s wooden_sword[enchantments={"pack:left_click_on_wand_punch":1}]
 tellraw @a "Left clicked!"
 ```
 
-```json [left_click_on_wand_punch.json.json]
+```json [left_click_on_wand_punch.json]
 {
     "description": "",
     "supported_items": [],
