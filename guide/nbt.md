@@ -23,11 +23,10 @@ scoreboard objectives add __pack__temp__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_level set from storage mypack data.Level
-data modify storage pack:vars pack_level set value 5
-execute store result score #add0 __pack__temp__ run data get storage pack:vars pack_level
+data modify storage mypack data.Level set value 5
+execute store result score #add0 __pack__temp__ run data get storage mypack data.Level
 scoreboard players add #add0 __pack__temp__ 1
-execute store result storage pack:vars pack_level int 1 run scoreboard players get #add0 __pack__temp__
+execute store result storage mypack data.Level int 1 run scoreboard players get #add0 __pack__temp__
 ```
 
 :::
@@ -138,22 +137,21 @@ scoreboard players set #_10 __pack__constant__ 10
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_x set from storage mypack data.Score
-execute store result score #add0 __pack__temp__ run data get storage pack:vars pack_x
+execute store result score #add0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players add #add0 __pack__temp__ 5
-execute store result storage pack:vars pack_x int 1 run scoreboard players get #add0 __pack__temp__
-execute store result score #sub0 __pack__temp__ run data get storage pack:vars pack_x
+execute store result storage mypack data.Score int 1 run scoreboard players get #add0 __pack__temp__
+execute store result score #sub0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players remove #sub0 __pack__temp__ 3
-execute store result storage pack:vars pack_x int 1 run scoreboard players get #sub0 __pack__temp__
-execute store result score #mul0 __pack__temp__ run data get storage pack:vars pack_x
+execute store result storage mypack data.Score int 1 run scoreboard players get #sub0 __pack__temp__
+execute store result score #mul0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players operation #mul0 __pack__temp__ *= #_2 __pack__constant__
-execute store result storage pack:vars pack_x int 1 run scoreboard players get #mul0 __pack__temp__
-execute store result score #div0 __pack__temp__ run data get storage pack:vars pack_x
+execute store result storage mypack data.Score int 1 run scoreboard players get #mul0 __pack__temp__
+execute store result score #div0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players operation #div0 __pack__temp__ /= #_4 __pack__constant__
-execute store result storage pack:vars pack_x int 1 run scoreboard players get #div0 __pack__temp__
-execute store result score #mod0 __pack__temp__ run data get storage pack:vars pack_x
+execute store result storage mypack data.Score int 1 run scoreboard players get #div0 __pack__temp__
+execute store result score #mod0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players operation #mod0 __pack__temp__ %= #_10 __pack__constant__
-execute store result storage pack:vars pack_x int 1 run scoreboard players get #mod0 __pack__temp__
+execute store result storage mypack data.Score int 1 run scoreboard players get #mod0 __pack__temp__
 ```
 
 :::
@@ -177,21 +175,20 @@ scoreboard players set #_1000 __pack__constant__ 1000
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_hp set from storage mypack data.Health
-execute store result score #mathp0 __pack__temp__ run data get storage pack:vars pack_hp 0.001
+execute store result score #mathp0 __pack__temp__ run data get storage mypack data.Health 0.001
 scoreboard players set #0 __pack__temp__ 0
 scoreboard players operation #mathp0 __pack__temp__ += #0 __pack__temp__
-execute store result storage pack:vars pack_hp double 1000 run scoreboard players get #mathp0 __pack__temp__
-execute store result score #mathp0 __pack__temp__ run data get storage pack:vars pack_hp 0.001
+execute store result storage mypack data.Health double 1000 run scoreboard players get #mathp0 __pack__temp__
+execute store result score #mathp0 __pack__temp__ run data get storage mypack data.Health 0.001
 scoreboard players set #1 __pack__temp__ 0
 scoreboard players operation #mathp0 __pack__temp__ *= #1 __pack__temp__
 scoreboard players operation #mathp0 __pack__temp__ *= #_1000 __pack__constant__
-execute store result storage pack:vars pack_hp double 1000 run scoreboard players get #mathp0 __pack__temp__
-execute store result score #mathp0 __pack__temp__ run data get storage pack:vars pack_hp 0.001
+execute store result storage mypack data.Health double 1000 run scoreboard players get #mathp0 __pack__temp__
+execute store result score #mathp0 __pack__temp__ run data get storage mypack data.Health 0.001
 scoreboard players set #2 __pack__temp__ 0
 scoreboard players operation #mathp0 __pack__temp__ /= #_1000 __pack__constant__
 scoreboard players operation #mathp0 __pack__temp__ /= #2 __pack__temp__
-execute store result storage pack:vars pack_hp double 1000 run scoreboard players get #mathp0 __pack__temp__
+execute store result storage mypack data.Health double 1000 run scoreboard players get #mathp0 __pack__temp__
 ```
 
 :::
@@ -210,10 +207,8 @@ a, b = b, a  # emits 3 data modify commands via a temp
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_a set from storage mypack data.A
-data modify storage pack:vars pack_b set from storage mypack data.B
-data modify storage pack:vars pack_a set from storage pack:vars pack_b
-data modify storage pack:vars pack_b set from storage pack:vars pack_a
+data modify storage mypack data.A set from storage mypack data.B
+data modify storage mypack data.B set from storage mypack data.A
 ```
 
 :::
@@ -287,8 +282,7 @@ scoreboard objectives add __pack__temp__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_names set from storage mypack data.Names
-data modify storage flare:temp for_arr_0 set from storage pack:vars pack_names
+data modify storage flare:temp for_arr_0 set from storage mypack data.Names
 execute if data storage flare:temp for_arr_0[0] run function pack:___init__/for_0
 ```
 
@@ -317,29 +311,8 @@ if "Alice" in names:
     print("found Alice")
 ```
 
-```mcfunction [__constants__.mcfunction]
-scoreboard objectives add __pack__temp__ dummy
-```
-
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_names set from storage mypack data.Names
-scoreboard players set #in_res_3 __pack__temp__ 0
-data modify storage flare:temp in_arr_4 set from storage pack:vars pack_names
-execute store result score #in_len_4 __pack__temp__ run data get storage flare:temp in_arr_4
-execute store result score #ret6 __pack__temp__ if score #in_len_4 __pack__temp__ matches 1.. if score #in_res_3 __pack__temp__ matches 0 run function pack:___init__/while_0
-execute if score #ret6 __pack__temp__ matches 1 run return 1
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #in_res_out_2
-execute store success score #n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value 0
-execute if score #n1 __pack__temp__ matches 1.. run tellraw @a "found Alice"
-```
-
-```mcfunction [___init__/while_0.mcfunction]
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp in_arr_4[0]
-execute store success score #n5 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value "Alice"
-execute if score #n5 __pack__temp__ matches 0 run scoreboard players set #in_res_3 __pack__temp__ 1
-data remove storage flare:temp in_arr_4[0]
-scoreboard players remove #in_len_4 __pack__temp__ 1
-execute if score #in_len_4 __pack__temp__ matches 1.. if score #in_res_3 __pack__temp__ matches 0 run function pack:___init__/while_0
+execute if data storage mypack data{Names:["Alice"]} run tellraw @a "found Alice"
 ```
 
 :::
@@ -487,7 +460,6 @@ data modify storage pack:vars pack_main_hand set from storage pack:vars pack_pla
 
 ---
 
-## Inline NBT Macros
+## Native NBT Suffix Literals & SNBT Objects
 
-See [Native Commands → Inline NBT Macros](./native-commands#inline-nbt-macros-nbt-and-nbt) for `nbt{...}` and `nbt[...]`
-usage.
+See [Native Commands → Native NBT Suffix Literals & SNBT Objects](./native-commands#native-nbt-suffix-literals--snbt-objects-snbt) for NBT type suffix literals (`1b`, `500s`, `1000L`, `3.5f`, `2.0d`) and `snbt` object usage.

@@ -71,15 +71,15 @@ summon cow ~ ~ ~ { "CustomName": '"Bessie"', "Invulnerable": 1b }
 
 :::
 
-## Inline NBT Macros (`nbt{...}` and `nbt[...]`)
+## Native NBT Suffix Literals & SNBT Objects (`nbt{}` & `snbt`)
 
-Use `nbt{...}` and `nbt[...]` to construct raw NBT structures inline without allocating a persistent storage variable. This acts like an f-string macro since it evaluates in-place, strips whitespace, and embeds the raw string into the surrounding command:
+Flare natively supports Minecraft NBT type suffixes directly on numeric literals (`1b`, `1B`, `500s`, `1000000L`, `3.5f`, `2.0d`), inline `nbt{...}` compound literals with unquoted keys, and standard Python dictionaries and lists. Suffix numbers automatically evaluate to `snbt` instances, supporting full compile-time arithmetic (e.g. `1b + 3b` -> `4b`), comparisons, and formatting directly into unescaped SNBT:
 
 ::: code-group
 
 ```python [Flare]
 i = 10
-infinite_invisibility = nbt{Id: 14, Duration: 999999, Amplifier: 1, ShowParticles: 0b}
+infinite_invisibility = {"Id": 14b, "Duration": 999999, "Amplifier": 1b + 0b, "ShowParticles": 0b}
 
 summon chicken ~$i ~ ~ {
     Tags: [f"quack{i}"],
@@ -90,14 +90,19 @@ summon chicken ~$i ~ ~ {
         ActiveEffects: [infinite_invisibility]
     }]
 }
+
+item_nbt = nbt{display: {Name: '"My Item"'}, CustomModelData: 7}
+say {item_nbt}
 ```
 
 ```mcfunction [__init__.mcfunction]
-summon chicken ~10 ~ ~ { Tags: [f"quack{i}"], IsChickenJockey: true, Passengers: [{ id: "minecraft:zombie", IsBaby: true, ActiveEffects: [infinite_invisibility] }] }
+summon chicken ~10 ~ ~ {Tags: ["quack10"], IsChickenJockey: true, Passengers: [{id: "minecraft:zombie", IsBaby: true, ActiveEffects: [{Id: 14b, Duration: 999999, Amplifier: 1b, ShowParticles: 0b}]}]}
+data modify storage pack:vars pack_item_nbt set value {display:{Name:"\"My Item\""},CustomModelData:7}
+say {item_nbt}
 ```
 
 :::
 
 ::: tip NBT Smart Lexer
-Flare's lexer understands Minecraft data types natively. You don't need to quote NBT keys (`Tags:` instead of `"Tags":`) and Python variables like `infinite_invisibility` or `i` will be evaluated and minified automatically.
+Flare's lexer understands Minecraft data types and compound structures natively. You don't need to quote NBT keys inside commands or `nbt{...}` compounds (`Tags:` instead of `"Tags":`), and Python variables or expressions inside `{...}` will be evaluated and formatted into minified SNBT automatically.
 :::

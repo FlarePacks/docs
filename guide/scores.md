@@ -162,10 +162,9 @@ scoreboard objectives add __pack__temp__ dummy
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_x __pack__vars__ 10
 scoreboard players operation pack_z __pack__vars__ = pack_x __pack__vars__
-scoreboard players operation pack_y __pack__vars__ = pack_x __pack__vars__
 scoreboard players add pack_x __pack__vars__ 5
-scoreboard players add pack_y __pack__vars__ 5
-tellraw @a [{"score": {"name": "pack_x", "objective": "__pack__vars__"}}, {"text": " "}, {"score": {"name": "pack_y", "objective": "__pack__vars__"}}, {"text": " "}, {"score": {"name": "pack_z", "objective": "__pack__vars__"}}]
+scoreboard players add pack_x __pack__vars__ 5
+tellraw @a [{"score": {"name": "pack_x", "objective": "__pack__vars__"}}, {"text": " "}, {"score": {"name": "pack_x", "objective": "__pack__vars__"}}, {"text": " "}, {"score": {"name": "pack_z", "objective": "__pack__vars__"}}]
 ```
 
 :::

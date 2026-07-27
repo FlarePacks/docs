@@ -462,51 +462,47 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_sentence set value "flare is awesome"
-data modify storage flare:temp #in_res_out_2 set value 0b
-data modify storage flare:temp find_str_4 set from storage pack:vars pack_sentence
-data modify storage flare:temp find_target_4 set value "flare"
-execute store result score #find_tlen_4 __pack__temp__ run data get storage flare:temp find_target_4
-execute store result score #find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
-scoreboard players set #find_match_4 __pack__temp__ 0
-scoreboard players set #c3 __pack__temp__ 0
-execute if score #find_slen_4 __pack__temp__ >= #find_tlen_4 __pack__temp__ run function pack:___init__/find_0
-execute if score #find_match_4 __pack__temp__ matches 1 run scoreboard players set #c3 __pack__temp__ -1
-execute if score #c3 __pack__temp__ matches 0.. run data modify storage flare:temp #in_res_out_2 set value 1b
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #in_res_out_2
-execute store success score #n1 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value 0
-execute if score #n1 __pack__temp__ matches 1.. run tellraw @a "Found flare!"
-execute store result score #temp_12 __pack__temp__ run data get storage pack:vars pack_sentence
-scoreboard players remove #temp_12 __pack__temp__ 7
-execute store result storage pack:__flare_temp__ __slice_args_13.start int 1 run scoreboard players get #temp_12 __pack__temp__
-function __flare_stdlib__:__flare_slice_13 with storage pack:__flare_temp__ __slice_args_13
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #slice_10
-execute store success score #n9 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value "awesome"
-execute if score #n9 __pack__temp__ matches 0 run tellraw @a "Awesome!"
+data modify storage flare:temp find_str_1 set from storage pack:vars pack_sentence
+data modify storage flare:temp find_target_1 set value "flare"
+execute store result score #find_tlen_1 __pack__temp__ run data get storage flare:temp find_target_1
+execute store result score #find_slen_1 __pack__temp__ run data get storage flare:temp find_str_1
+scoreboard players set #find_match_1 __pack__temp__ 0
+scoreboard players set #c0 __pack__temp__ 0
+execute if score #find_slen_1 __pack__temp__ >= #find_tlen_1 __pack__temp__ run function pack:___init__/find_0
+execute if score #find_match_1 __pack__temp__ matches 1 run scoreboard players set #c0 __pack__temp__ -1
+execute if score #c0 __pack__temp__ matches 0.. run tellraw @a "Found flare!"
+execute store result score #temp_9 __pack__temp__ run data get storage pack:vars pack_sentence
+scoreboard players remove #temp_9 __pack__temp__ 7
+execute store result storage pack:__flare_temp__ __slice_args_10.start int 1 run scoreboard players get #temp_9 __pack__temp__
+function __flare_stdlib__:__flare_slice_10 with storage pack:__flare_temp__ __slice_args_10
+data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp #slice_7
+execute store success score #n6 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set value "awesome"
+execute if score #n6 __pack__temp__ matches 0 run tellraw @a "Awesome!"
 ```
 
 ```mcfunction [___init__/find_0.mcfunction]
-execute store result storage pack:__flare_temp__ __slice_args_6.stop int 1 run scoreboard players get #find_tlen_4 __pack__temp__
-function __flare_stdlib__:__flare_slice_6 with storage pack:__flare_temp__ __slice_args_6
-scoreboard players set #find_match_4 __pack__temp__ 1
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_slice_4
-execute store success score #n7 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_target_4
-execute if score #n7 __pack__temp__ matches 0 run scoreboard players set #find_match_4 __pack__temp__ 0
-execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp find_str_4 1
-execute if score #find_match_4 __pack__temp__ matches 1 run data modify storage flare:temp find_str_4 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute if score #find_match_4 __pack__temp__ matches 1 run scoreboard players add #c3 __pack__temp__ 1
-execute store result score #find_slen_4 __pack__temp__ run data get storage flare:temp find_str_4
-execute if score #find_match_4 __pack__temp__ matches 1 if score #find_slen_4 __pack__temp__ >= #find_tlen_4 __pack__temp__ run function pack:___init__/find_0
+execute store result storage pack:__flare_temp__ __slice_args_3.stop int 1 run scoreboard players get #find_tlen_1 __pack__temp__
+function __flare_stdlib__:__flare_slice_3 with storage pack:__flare_temp__ __slice_args_3
+scoreboard players set #find_match_1 __pack__temp__ 1
+data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_slice_1
+execute store success score #n4 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp find_target_1
+execute if score #n4 __pack__temp__ matches 0 run scoreboard players set #find_match_1 __pack__temp__ 0
+execute if score #find_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+execute if score #find_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp find_str_1 1
+execute if score #find_match_1 __pack__temp__ matches 1 run data modify storage flare:temp find_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute if score #find_match_1 __pack__temp__ matches 1 run scoreboard players add #c0 __pack__temp__ 1
+execute store result score #find_slen_1 __pack__temp__ run data get storage flare:temp find_str_1
+execute if score #find_match_1 __pack__temp__ matches 1 if score #find_slen_1 __pack__temp__ >= #find_tlen_1 __pack__temp__ run function pack:___init__/find_0
 ```
 
-```mcfunction [__flare_slice_13.mcfunction]
-data modify storage flare:temp #slice_10 set value ""
-$data modify storage flare:temp #slice_10 set string storage pack:vars pack_sentence $(start)
+```mcfunction [__flare_slice_10.mcfunction]
+data modify storage flare:temp #slice_7 set value ""
+$data modify storage flare:temp #slice_7 set string storage pack:vars pack_sentence $(start)
 ```
 
-```mcfunction [__flare_slice_6.mcfunction]
-data modify storage flare:temp find_slice_4 set value ""
-$data modify storage flare:temp find_slice_4 set string storage flare:temp find_str_4 0 $(stop)
+```mcfunction [__flare_slice_3.mcfunction]
+data modify storage flare:temp find_slice_1 set value ""
+$data modify storage flare:temp find_slice_1 set string storage flare:temp find_str_1 0 $(stop)
 ```
 
 :::
