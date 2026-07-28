@@ -609,6 +609,7 @@ length = len(name) # Stored dynamically in a scoreboard objective
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__vars__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]

@@ -200,68 +200,9 @@ greeting = greeting.replace("hello", "goodbye")
 # "goodbye world, goodbye universe"
 ```
 
-```mcfunction [__constants__.mcfunction]
-scoreboard objectives add __pack__temp__ dummy
-```
-
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_greeting set value "hello world, hello universe"
-data modify storage flare:temp repl_str_1 set from storage pack:vars pack_greeting
-data modify storage flare:temp repl_old_1 set value "hello"
-data modify storage flare:temp repl_new_1 set value "goodbye"
-execute store result score #repl_olen_1 __pack__temp__ run data get storage flare:temp repl_old_1
-data modify storage pack:vars pack_greeting set value ""
-scoreboard players set #repl_limit_1 __pack__temp__ -1
-scoreboard players set #repl_match_1 __pack__temp__ 0
-execute store result score #repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
-execute if score #repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
-```
-
-```mcfunction [___init__/repl_0.mcfunction]
-execute store result storage pack:__flare_temp__ __slice_args_3.stop int 1 run scoreboard players get #repl_olen_1 __pack__temp__
-function __flare_stdlib__:__flare_slice_3 with storage pack:__flare_temp__ __slice_args_3
-scoreboard players set #repl_match_1 __pack__temp__ 1
-data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp repl_slice_1
-execute store success score #n4 __pack__temp__ run data modify storage pack:__flare_temp__ __nbt_cmp set from storage flare:temp repl_old_1
-execute if score #n4 __pack__temp__ matches 0 run scoreboard players set #repl_match_1 __pack__temp__ 0
-execute if score #repl_limit_1 __pack__temp__ matches 0 if score #repl_match_1 __pack__temp__ matches 0 run scoreboard players set #repl_match_1 __pack__temp__ 1
-execute if score #repl_match_1 __pack__temp__ matches 0 run scoreboard players remove #repl_limit_1 __pack__temp__ 1
-execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5 set value {__strcat_address:"storage pack:vars pack_greeting"}
-execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input1 set from storage pack:vars pack_greeting
-execute if score #repl_match_1 __pack__temp__ matches 0 run data modify storage pack:__flare_temp__ __strcat_5.__strcat_input2 set from storage flare:temp repl_new_1
-execute if score #repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_strcat_5 with storage pack:__flare_temp__ __strcat_5
-execute if score #repl_match_1 __pack__temp__ matches 0 store result storage pack:__flare_temp__ __slice_args_7.start int 1 run scoreboard players get #repl_olen_1 __pack__temp__
-execute if score #repl_match_1 __pack__temp__ matches 0 run function __flare_stdlib__:__flare_slice_7 with storage pack:__flare_temp__ __slice_args_7
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set value ""
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_char_1 set string storage flare:temp repl_str_1 0 1
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9 set value {__strcat_address:"storage pack:vars pack_greeting"}
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input1 set from storage pack:vars pack_greeting
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __strcat_9.__strcat_input2 set from storage flare:temp repl_char_1
-execute if score #repl_match_1 __pack__temp__ matches 1 run function __flare_stdlib__:__flare_strcat_9 with storage pack:__flare_temp__ __strcat_9
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp repl_str_1 1
-execute if score #repl_match_1 __pack__temp__ matches 1 run data modify storage flare:temp repl_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score #repl_tlen_1 __pack__temp__ run data get storage flare:temp repl_str_1
-execute if score #repl_tlen_1 __pack__temp__ matches 1.. run function pack:___init__/repl_0
-```
-
-```mcfunction [__flare_slice_3.mcfunction]
-data modify storage flare:temp repl_slice_1 set value ""
-$data modify storage flare:temp repl_slice_1 set string storage flare:temp repl_str_1 0 $(stop)
-```
-
-```mcfunction [__flare_slice_7.mcfunction]
-data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-$data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp repl_str_1 $(start)
-data modify storage flare:temp repl_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
-```
-
-```mcfunction [__flare_strcat_5.mcfunction]
-$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
-```
-
-```mcfunction [__flare_strcat_9.mcfunction]
-$data modify $(__strcat_address) set value "$(__strcat_input1)$(__strcat_input2)"
+$data modify storage pack:vars pack_greeting set value "$(<function LazyOp.__getattr__.<locals>.lazy_method_wrapper at 0x7d012274d300>)"
 ```
 
 :::
@@ -285,14 +226,17 @@ dirty = nbtstr("   data   ")
 clean = dirty.strip() # "data"
 ```
 
-### `.reverse()`
-Reverses the string dynamically.
+### `.reverse()` and `reversed()`
+Reverses the string dynamically (in-place when called as a statement, or out-of-place when assigned). `reversed(s)` is also provided as a built-in helper that invokes `s.reverse()`.
 
 ::: code-group
 
 ```python [Flare]
 word = nbtstr("hello")
-reversed_word = word.reverse() # "olleh"
+word.reverse() # In-place reverse: "olleh"
+
+greeting = nbtstr("world")
+rev_greeting = reversed(greeting) # Out-of-place reverse: "dlrow"
 ```
 
 ```mcfunction [__constants__.mcfunction]
@@ -301,24 +245,43 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 data modify storage pack:vars pack_word set value "hello"
-data modify storage flare:temp rev_str_1 set from storage pack:vars pack_word
-data modify storage pack:vars pack_reversed_word set value ""
-execute store result score #rev_len_1 __pack__temp__ run data get storage flare:temp rev_str_1
-execute if score #rev_len_1 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+data modify storage pack:__flare_temp__ rev_str_0 set from storage pack:vars pack_word
+data modify storage pack:vars pack_word set value ""
+execute store result score #rev_len_0 __pack__temp__ run data get storage pack:__flare_temp__ rev_str_0
+execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_str_0
+data modify storage pack:vars pack_greeting set value "world"
+data modify storage pack:__flare_temp__ rev_str_4 set from storage pack:vars pack_greeting
+data modify storage pack:vars pack_rev_greeting set value ""
+execute store result score #rev_len_4 __pack__temp__ run data get storage pack:__flare_temp__ rev_str_4
+execute if score #rev_len_4 __pack__temp__ matches 1.. run function pack:___init__/rev_str_1
 ```
 
-```mcfunction [___init__/rev_0.mcfunction]
-data modify storage flare:temp rev_char_1 set value ""
-data modify storage flare:temp rev_char_1 set string storage flare:temp rev_str_1 0 1
-data modify storage pack:__flare_temp__ __strcat set value {__strcat_address:"storage pack:vars pack_reversed_word"}
-data modify storage pack:__flare_temp__ __strcat.__strcat_input2 set from storage pack:vars pack_reversed_word
-data modify storage pack:__flare_temp__ __strcat.__strcat_input1 set from storage flare:temp rev_char_1
+```mcfunction [___init__/rev_str_0.mcfunction]
+data modify storage pack:__flare_temp__ rev_char_0 set value ""
+data modify storage pack:__flare_temp__ rev_char_0 set string storage pack:__flare_temp__ rev_str_0 0 1
+data modify storage pack:__flare_temp__ __strcat set value {__strcat_address:"storage pack:vars pack_word"}
+data modify storage pack:__flare_temp__ __strcat.__strcat_input2 set from storage pack:vars pack_word
+data modify storage pack:__flare_temp__ __strcat.__strcat_input1 set from storage pack:__flare_temp__ rev_char_0
 function __flare_stdlib__:__flare_strcat with storage pack:__flare_temp__ __strcat
 data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
-data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage flare:temp rev_str_1 1
-data modify storage flare:temp rev_str_1 set from storage pack:__flare_temp__ __flare_slice_tmp
-execute store result score #rev_len_1 __pack__temp__ run data get storage flare:temp rev_str_1
-execute if score #rev_len_1 __pack__temp__ matches 1.. run function pack:___init__/rev_0
+data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage pack:__flare_temp__ rev_str_0 1
+data modify storage pack:__flare_temp__ rev_str_0 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #rev_len_0 __pack__temp__ run data get storage pack:__flare_temp__ rev_str_0
+execute if score #rev_len_0 __pack__temp__ matches 1.. run function pack:___init__/rev_str_0
+```
+
+```mcfunction [___init__/rev_str_1.mcfunction]
+data modify storage pack:__flare_temp__ rev_char_4 set value ""
+data modify storage pack:__flare_temp__ rev_char_4 set string storage pack:__flare_temp__ rev_str_4 0 1
+data modify storage pack:__flare_temp__ __strcat set value {__strcat_address:"storage pack:vars pack_rev_greeting"}
+data modify storage pack:__flare_temp__ __strcat.__strcat_input2 set from storage pack:vars pack_rev_greeting
+data modify storage pack:__flare_temp__ __strcat.__strcat_input1 set from storage pack:__flare_temp__ rev_char_4
+function __flare_stdlib__:__flare_strcat with storage pack:__flare_temp__ __strcat
+data modify storage pack:__flare_temp__ __flare_slice_tmp set value ""
+data modify storage pack:__flare_temp__ __flare_slice_tmp set string storage pack:__flare_temp__ rev_str_4 1
+data modify storage pack:__flare_temp__ rev_str_4 set from storage pack:__flare_temp__ __flare_slice_tmp
+execute store result score #rev_len_4 __pack__temp__ run data get storage pack:__flare_temp__ rev_str_4
+execute if score #rev_len_4 __pack__temp__ matches 1.. run function pack:___init__/rev_str_1
 ```
 
 ```mcfunction [__flare_strcat.mcfunction]

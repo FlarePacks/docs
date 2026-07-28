@@ -232,6 +232,8 @@ Collections such as lists and arrays represent sequence paths inside NBT values.
 - `.prepend(value)`: Prepends an element to the start of the sequence.
 - `.insert(index, value)`: Inserts an element at a specific index.
 - `.remove()`: Removes the sequence element currently pointed to.
+- `.reverse()`: Reverses the sequence (in-place when called directly, or out-of-place when assigned).
+- `reversed(sequence)`: Built-in helper that invokes `.reverse()`.
 - `.erase(value)`: Not natively supported for lists (use for strings instead).
 - `len(sequence)`: Returns the number of items in the sequence as a score.
 
