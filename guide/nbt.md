@@ -387,7 +387,7 @@ from flare import ref
 = 10
 
 # For custom entity NBT, use a ref() alias
-inv = ref( @ s.Inventory)
+inv = ref(@s.Inventory)
 
 # Selectors with filters
 @a[distance
