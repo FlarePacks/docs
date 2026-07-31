@@ -20,26 +20,18 @@ else:
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__vars__ dummy
-scoreboard objectives add __pack__temp__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_x __pack__vars__ 5
 scoreboard players set pack_y __pack__vars__ 10
-scoreboard players set #elif0 __pack__temp__ 0
-execute if score #elif0 __pack__temp__ matches 0 if score pack_x __pack__vars__ > pack_y __pack__vars__ run function pack:___init__/generated_0
-execute if score #elif0 __pack__temp__ matches 0 if score pack_x __pack__vars__ = pack_y __pack__vars__ run function pack:___init__/generated_1
-execute if score #elif0 __pack__temp__ matches 0 run tellraw @a "Y is bigger!"
+function pack:___init__/if_0
 ```
 
-```mcfunction [___init__/generated_0.mcfunction]
-scoreboard players set #elif0 __pack__temp__ 1
-tellraw @a "X is bigger!"
-```
-
-```mcfunction [___init__/generated_1.mcfunction]
-scoreboard players set #elif0 __pack__temp__ 1
-tellraw @a "They are equal!"
+```mcfunction [___init__/if_0.mcfunction]
+execute if score pack_x __pack__vars__ > pack_y __pack__vars__ run return run tellraw @a "X is bigger!"
+execute if score pack_x __pack__vars__ = pack_y __pack__vars__ run return run tellraw @a "They are equal!"
+tellraw @a "Y is bigger!"
 ```
 
 :::
@@ -203,11 +195,12 @@ if s.has_item(at="weapon.mainhand", item="diamond_sword"):
 ```
 
 ```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__vars__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
-execute store success score #succ_0 __pack__vars__ run say hi
+execute store success score #succ_0 __pack__temp__ run say hi
 execute store success score pack_my_score __pack__vars__ run setblock ~ ~ ~ stone
 ```
 
@@ -240,19 +233,16 @@ if y > 4:
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__vars__ dummy
-scoreboard objectives add __pack__temp__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_x __pack__vars__ 5
-scoreboard players set #elif0 __pack__temp__ 0
-execute if score #elif0 __pack__temp__ matches 0 if score pack_x __pack__vars__ matches 5.. run function pack:___init__/generated_0
-execute if score #elif0 __pack__temp__ matches 0 run tellraw @a "Never!"
+function pack:___init__/if_0
 ```
 
-```mcfunction [___init__/generated_0.mcfunction]
-scoreboard players set #elif0 __pack__temp__ 1
-tellraw @a "Maybe!"
+```mcfunction [___init__/if_0.mcfunction]
+execute if score pack_x __pack__vars__ matches 5.. run return run tellraw @a "Maybe!"
+tellraw @a "Never!"
 ```
 
 :::

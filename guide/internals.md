@@ -434,3 +434,153 @@ The `Function` class is incredibly smart and evaluates to a `_LazyFunctionCall`.
 - **Standalone:** Evaluates natively (e.g. `function examples:test/func`)
 - **Assignment:** Resolves through `__iset__`/`__icopy__` using `execute store result ... run function ...`
 - **Conditionals:** Resolves through `__branch__` using `execute if function ...` or safely buffering macro-arguments into a temporary success check via `execute store success ... run function ...`.
+
+### Entity Scoreboard Shorthand
+
+Flare allows accessing entity scoreboards using concise `@<selector> <objective>` syntax (or `@<selector>[...] <objective>`). The preprocessor automatically converts this into a `score` object targeting that entity and objective:
+
+```python
+# You write:
+x = @s gold
+y = @s[type=player, tag=active] speed
+
+# The preprocessor seamlessly converts this to:
+x = score(addr="@s gold")
+y = score(addr="@s[type=player, tag=active] speed")
+```
+
+### Space-Separated Storage, Entity, and Block NBT Syntax
+
+Flare allows defining `storage`, `entity`, and `block` NBT variables using concise space-separated syntax (with or without sub-paths and type subscripts like `storage[int]`, `entity[list[int]]`, or `block[str]`). The preprocessor automatically converts these directly into `nbt(addr=...)`:
+
+```python
+# You write:
+z = storage 1test:test421--asda hi.test."test"."test-"
+e1 = entity @s Inventory.0.id
+e2 = entity @s[type=pig, tag=active] Pos.0
+b1 = block ~ 5 ^-5 Items.0.id
+b2 = block b~ ~-1 ~ Lock
+s0 = storage flare:vars
+e0 = entity @s
+b0 = block ~ ~ ~
+st1 = storage[int] test path.to.some
+et1 = entity[list[int]] @s Inventory.0
+
+# The preprocessor seamlessly converts this to:
+z = nbt(addr="storage 1test:test421--asda hi.test.test.test-")
+e1 = nbt(addr="entity @s Inventory.0.id")
+e2 = nbt(addr="entity @s[type=pig, tag=active] Pos.0")
+b1 = nbt(addr="block ~ 5 ^-5 Items.0.id")
+b2 = nbt(addr="block ~ ~-1 ~ Lock")
+s0 = nbt(addr="storage flare:vars")
+e0 = nbt(addr="entity @s")
+b0 = nbt(addr="block ~ ~ ~")
+st1 = nbt(addr="storage test path.to.some")[int]
+et1 = nbt(addr="entity @s Inventory.0")[list[int]]
+```
+
+### `store(target OP= value)` Assignment Operations
+
+Inside `store(...)` statements, augmented assignment operators (`+=`, `-=`, `*=`, `/=`, `%=`, `=`) are automatically converted by the preprocessor into stored operation methods before AST parsing:
+
+```python
+# You write:
+tmp["4"][short] = store(score_ /= 65536)
+
+# The preprocessor seamlessly converts this to:
+tmp["4"][short] = store(score_).idiv(65536)
+```
+
+### Pattern Matching (`match ... case`) Desugaring
+
+Python 3.10+ `match ... case` statements are desugared into `_flare_if` conditional chains with `return`-based sub-function branching. This allows matching on scores, NBT values, and selectors using native pattern matching syntax:
+
+```python
+# You write:
+match x:
+    case 1:
+        print(4)
+    case 3 | 5:
+        print(7)
+    case _:
+        print(2)
+```
+
+### Return-Based Sub-Function Branching
+
+When `if / elif / else` chains contain multiple branches or `else` blocks, Flare extracts the branching logic into a dedicated sub-function file and executes each branch with `execute if <cond> run return run <cmd>`. This eliminates `#elif` temporary scoreboard variables completely, resulting in cleaner and faster Minecraft function output:
+
+::: code-group
+
+```python [Flare]
+from flare import score
+
+x = score(5)
+if x > 5:
+    return 5
+else:
+    print(2)
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_x __pack__vars__ 5
+function pack:___init__/if_0
+```
+
+```mcfunction [___init__/if_0.mcfunction]
+execute if score pack_x __pack__vars__ matches 6.. run return 5
+tellraw @a "2"
+```
+
+:::
+
+## Custom Variable Address Formatters
+
+By default, Flare formats named score and NBT variables as follows:
+- **Score variables**: `{varid} __{namespace}__vars__` (e.g. `x __mypack__vars__`)
+- **NBT variables**: `storage {namespace}:vars {varid}` (e.g. `storage mypack:vars x`)
+
+You can query or customize these variable address formats globally using `set_score_var_addr_formatter` and `set_nbt_var_addr_formatter`:
+
+::: code-group
+
+```python [Flare]
+from flare import set_score_var_addr_formatter, set_nbt_var_addr_formatter, get_score_var_addr, get_nbt_var_addr, score, nbt, namespace
+
+namespace("mypack")
+
+# Inspect default addresses
+print(get_score_var_addr("x"))               # Outputs: "x __mypack__vars__"
+print(get_score_var_addr("x", "custom_ns"))   # Outputs: "x __custom_ns__vars__"
+print(get_nbt_var_addr("mypack", "data"))     # Outputs: "storage mypack:vars data"
+
+# Define custom address formatters
+set_score_var_addr_formatter(lambda varid, ns: f"{varid} custom_vars_{ns}")
+set_nbt_var_addr_formatter(lambda ns, varid: f"storage {ns}:custom_nbt {varid}")
+
+my_score = score(10)
+my_nbt = nbt(5)
+
+# Reset formatters back to default
+set_score_var_addr_formatter(None)
+set_nbt_var_addr_formatter(None)
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add custom_vars_mypack dummy
+```
+
+```mcfunction [__init__.mcfunction]
+tellraw @a "x __mypack__vars__"
+tellraw @a "x __custom_ns__vars__"
+tellraw @a "storage mypack:vars data"
+scoreboard players set mypack_my_score custom_vars_mypack 10
+data modify storage mypack:custom_nbt mypack_my_nbt set value 5
+```
+
+:::
+
