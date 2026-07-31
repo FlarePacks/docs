@@ -131,8 +131,6 @@ x %= 10
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
-scoreboard players set #_2 __pack__constant__ 2
-scoreboard players set #_4 __pack__constant__ 4
 scoreboard players set #_10 __pack__constant__ 10
 ```
 
@@ -143,12 +141,8 @@ execute store result storage mypack data.Score int 1 run scoreboard players get 
 execute store result score #sub0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players remove #sub0 __pack__temp__ 3
 execute store result storage mypack data.Score int 1 run scoreboard players get #sub0 __pack__temp__
-execute store result score #mul0 __pack__temp__ run data get storage mypack data.Score
-scoreboard players operation #mul0 __pack__temp__ *= #_2 __pack__constant__
-execute store result storage mypack data.Score int 1 run scoreboard players get #mul0 __pack__temp__
-execute store result score #div0 __pack__temp__ run data get storage mypack data.Score
-scoreboard players operation #div0 __pack__temp__ /= #_4 __pack__constant__
-execute store result storage mypack data.Score int 1 run scoreboard players get #div0 __pack__temp__
+execute store result storage mypack data.Score int 2 run data get storage mypack data.Score
+execute store result storage mypack data.Score int 0.25 run data get storage mypack data.Score
 execute store result score #mod0 __pack__temp__ run data get storage mypack data.Score
 scoreboard players operation #mod0 __pack__temp__ %= #_10 __pack__constant__
 execute store result storage mypack data.Score int 1 run scoreboard players get #mod0 __pack__temp__
