@@ -377,22 +377,16 @@ from flare import ref
 
 
 # Schema-aware: Flare knows Health is a float, Count is a byte
-@s.Health
-
--= 2.0
+@s.Health -= 2.0
 
 
-@s.Inventory[0].Count
-
-= 10
+@s.Inventory[0].Count = 10
 
 # For custom entity NBT, use a ref() alias
 inv = ref(@s.Inventory)
 
 # Selectors with filters
-@a[distance
-
-=..5].Health = 20.0
+@a[distance=..5].Health = 20.0
 ```
 
 See [Selectors](./selectors) for the full selector API.
