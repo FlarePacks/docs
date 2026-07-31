@@ -415,14 +415,13 @@ custom = ref(player["Custom Key"][str])
 
 # Compound filter — like Minecraft's [{"Slot": 0}] NBT path syntax
 main_hand = ref(player.Inventory[{"Slot": 0}])
+
+# Reading or writing to the endpoint emits commands:
+hp = 20.0
 ```
 
 ```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_player set from storage mypack data.Player
-data modify storage pack:vars pack_hp set from storage pack:vars pack_player.Health
-data modify storage pack:vars pack_first_item set from storage pack:vars pack_player.Inventory[0]
-data modify storage pack:vars pack_custom set from storage pack:vars pack_player."Custom Key"
-data modify storage pack:vars pack_main_hand set from storage pack:vars pack_player.Inventory[{"Slot": 0}]
+data modify storage mypack data.Player.Health set value 20.0f
 ```
 
 :::
@@ -442,10 +441,23 @@ See [Native Commands → Native NBT Suffix Literals & SNBT Objects](./native-com
 
 Flare allows constructing native Minecraft NBT Byte, Int, and Long arrays directly using SNBT literal array syntax (`[B; ...]`, `[I; ...]`, `[L; ...]`). You can mix compile-time constants and runtime variables (such as `score` or `nbt`):
 
-```python
-x = nbt(addr="storage test vars")
+::: code-group
+
+```python [Flare]
 y = score(5)
 
-x[:] = [B; 1, 2, 3, 10, y, y]
+storage test vars = [B; 1, 2, 3, 10, y, y]
 ```
 
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_y __pack__vars__ 5
+data modify storage test vars set value [B;1b,2b,3b,10b,0b,0b]
+execute store result storage test vars[4] byte 1 run scoreboard players get pack_y __pack__vars__
+execute store result storage test vars[5] byte 1 run scoreboard players get pack_y __pack__vars__
+```
+
+:::
