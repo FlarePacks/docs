@@ -99,7 +99,7 @@ For entirely custom NBT data paths that Flare's schema isn't aware of, you can s
 ::: code-group
 
 ```python [Flare]
-storage.my_data.test[int] = 10
+storage my_data test[int] = 10
 ```
 
 ```mcfunction [__init__.mcfunction]

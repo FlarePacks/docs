@@ -13,7 +13,7 @@ tracks the datatype so it can emit the correct commands automatically.
 from flare import storage, ref
 
 # Create a typed alias to a storage path (no data is copied)
-level = ref(storage.mypack.data.Level[int])
+level = ref(storage mypack data.Level[int])
 level = 5
 level += 1
 ```
@@ -37,7 +37,7 @@ execute store result storage mypack data.Level int 1 run scoreboard players get 
 
 ```python [Flare]
 # This COPIES data from storage into a local NBT variable
-level = storage.mypack.data.Level[int]
+level = storage mypack data.Level[int]
 ```
 
 ```mcfunction [__init__.mcfunction]
@@ -120,7 +120,7 @@ operations.
 ::: code-group
 
 ```python [Flare]
-x = ref(storage.mypack.data.Score[int])
+x = ref(storage mypack data.Score[int])
 x += 5
 x -= 3
 x *= 2
@@ -156,7 +156,7 @@ For **float/double** NBT arithmetic (which requires a fixed-point intermediate),
 
 ```python [Flare]
 # addp(other, multiplier): multiplies both sides before operating, then divides back
-hp = ref(storage.mypack.data.Health[double])
+hp = ref(storage mypack data.Health[double])
 hp.addp(1.5, 1000)  # adds 1.5 with 1000x precision
 hp.mulp(1.1, 1000)
 hp.divp(2.0, 1000)
@@ -194,8 +194,8 @@ You can cleanly swap NBT values together. Flare uses hidden temporary NBT nodes 
 ::: code-group
 
 ```python [Flare]
-a = ref(storage.mypack.data.A[int])
-b = ref(storage.mypack.data.B[int])
+a = ref(storage mypack data.A[int])
+b = ref(storage mypack data.B[int])
 
 a, b = b, a  # emits 3 data modify commands via a temp
 ```
@@ -236,7 +236,7 @@ Collections such as lists and arrays represent sequence paths inside NBT values.
 ```python
 from flare import storage, ref, array
 
-items = ref(storage.mypack.data.Items[list])
+items = ref(storage mypack data.Items[list])
 
 # Append a literal or NBT value
 items.append("hello")
@@ -267,7 +267,7 @@ Iterate over an NBT list or array using a standard `for` loop. Each element is b
 ```python [Flare]
 from flare import storage, ref
 
-names = ref(storage.mypack.data.Names[list[str]])
+names = ref(storage mypack data.Names[list[str]])
 
 for name in names:
     print(name)
@@ -301,7 +301,7 @@ Check whether a value exists inside an NBT list:
 ::: code-group
 
 ```python [Flare]
-names = ref(storage.mypack.data.Names[list[str]])
+names = ref(storage mypack data.Names[list[str]])
 
 if "Alice" in names:
     print("found Alice")
@@ -329,7 +329,7 @@ Compounds (`nbtcompound`) and Structs represent grouping paths inside NBT values
 You can easily merge two compound dictionaries together using `.merge()`:
 
 ```python
-compound = ref(storage.mypack.data.Config[dict])
+compound = ref(storage mypack data.Config[dict])
 compound.merge(other_compound)
 ```
 
@@ -364,13 +364,13 @@ class FileType:
 
 
 # Usage: cast any NBT path to the struct type
-chest_item = ref(storage.mypack.chest.item[Item])
+chest_item = ref(storage mypack chest.item[Item])
 chest_item.count = 64
 chest_item.name = "diamond_sword"
 chest_item.lore[0].text = "Made with Flare"
 
 # Self-referential tree
-tree = ref(storage.mypack.fs[FileType])
+tree = ref(storage mypack fs[FileType])
 tree.id = 1
 tree.children[0].id = 2
 tree.children[0].children[0].name = "leaf"
@@ -426,7 +426,7 @@ Access sub-paths using Python dot notation or subscript notation:
 ```python [Flare]
 from flare import storage, ref
 
-player = ref(storage.mypack.data.Player[dict])
+player = ref(storage mypack data.Player[dict])
 
 # Dot notation
 hp = ref(player.Health[float])
