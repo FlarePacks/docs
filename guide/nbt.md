@@ -80,24 +80,6 @@ data modify storage pack:vars pack_level set from storage mypack data.Level
 > `list[int]` and `array[int]` are **different** NBT types. `list[int]` is a regular NBT List; `array[int]` is a packed
 `[I;...]` Int Array. Use `array[X]` for typed arrays and `list[X]` for typed lists.
 
-### Type shorthands
-
-You can import the pre-built typed classes directly to avoid writing `nbt[int]` everywhere:
-
-::: code-group
-
-```python [Flare]
-from flare import nbtint, nbtstr, nbtlist, nbtcompound, nbtbytearray
-
-x = nbtint(addr="storage mypack:data X")
-```
-
-```mcfunction [__init__.mcfunction]
-data modify storage pack:vars pack_x set from storage mypack:data X
-```
-
-:::
-
 ---
 
 ## NBT Numbers
@@ -459,3 +441,17 @@ data modify storage pack:vars pack_main_hand set from storage pack:vars pack_pla
 ## Native NBT Suffix Literals & SNBT Objects
 
 See [Native Commands → Native NBT Suffix Literals & SNBT Objects](./native-commands#native-nbt-suffix-literals--snbt-objects-snbt) for NBT type suffix literals (`1b`, `500s`, `1000L`, `3.5f`, `2.0d`) and `snbt` object usage.
+
+---
+
+## SNBT Array Literals (`[B; ...]`, `[I; ...]`, `[L; ...]`)
+
+Flare allows constructing native Minecraft NBT Byte, Int, and Long arrays directly using SNBT literal array syntax (`[B; ...]`, `[I; ...]`, `[L; ...]`). You can mix compile-time constants and runtime variables (such as `score` or `nbt`):
+
+```python
+x = nbt(addr="storage test vars")
+y = score(5)
+
+x[:] = [B; 1, 2, 3, 10, y, y]
+```
+
