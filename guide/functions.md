@@ -418,7 +418,7 @@ announce("Hello World!", some_player_nbt)
 **2. With NBT Variables (Storage Call)**
 If you pass an `nbt` variable into a macro parameter, Flare handles the complexity of packing the variable into a temporary macro storage compound and invoking the function:
 ```python
-my_dynamic_msg = storage.mypack.messages.greeting
+my_dynamic_msg = storage mypack messages.greeting
 announce(my_dynamic_msg, some_player_nbt)
 # Generates:
 # data modify storage my_pack:__flare_macros__ call_0.msg set from ...
@@ -430,8 +430,8 @@ announce(my_dynamic_msg, some_player_nbt)
 If you want to invoke an exported function using an existing NBT compound or Entity as the macro context (equivalent to Minecraft's `function ... with <source>`), use the `.with_()` method attached to your exported function:
 
 ```python
-# Assuming storage.mypack.data has a compound containing {"msg": "..."}
-announce.with_(storage.mypack.data, player=some_player_nbt)
+# Assuming storage mypack data has a compound containing {"msg": "..."}
+announce.with_(storage mypack data, player=some_player_nbt)
 # Generates: function my_pack:announce with storage mypack data
 
 # You can also use entities!

@@ -451,7 +451,7 @@ y = score(addr="@s[type=player, tag=active] speed")
 
 ### Space-Separated Storage, Entity, and Block NBT Syntax
 
-Flare allows defining `storage`, `entity`, and `block` NBT variables using concise space-separated syntax (with or without sub-paths and type subscripts like `storage[int]`, `entity[list[int]]`, or `block[str]`). The preprocessor automatically converts these directly into `nbt(addr=...)`:
+Flare allows defining `storage`, `entity`, and `block` NBT variables using concise space-separated syntax (with or without sub-paths and trailing type subscripts/indexers like `storage.mypack.data.Level[int]`, `storage test path.to.some[int]`, or `entity @s Inventory.0[list[int]]`). The preprocessor automatically converts these directly into `nbt(addr=...)`:
 
 ```python
 # You write:
@@ -463,20 +463,22 @@ b2 = block b~ ~-1 ~ Lock
 s0 = storage flare:vars
 e0 = entity @s
 b0 = block ~ ~ ~
-st1 = storage[int] test path.to.some
-et1 = entity[list[int]] @s Inventory.0
+level = storage.mypack.data.Level[int]
+st1 = storage test path.to.some[int]
+et1 = entity @s Inventory.0[list[int]]
 
 # The preprocessor seamlessly converts this to:
-z = nbt(addr="storage 1test:test421--asda hi.test.test.test-")
-e1 = nbt(addr="entity @s Inventory.0.id")
-e2 = nbt(addr="entity @s[type=pig, tag=active] Pos.0")
-b1 = nbt(addr="block ~ 5 ^-5 Items.0.id")
-b2 = nbt(addr="block ~ ~-1 ~ Lock")
+z = nbt(addr="storage 1test:test421--asda").hi.test["test"]["test-"]
+e1 = nbt(addr="entity @s").Inventory[0].id
+e2 = nbt(addr="entity @s[type=pig, tag=active]").Pos[0]
+b1 = nbt(addr="block ~ 5 ^-5").Items[0].id
+b2 = nbt(addr="block ~ ~-1 ~").Lock
 s0 = nbt(addr="storage flare:vars")
 e0 = nbt(addr="entity @s")
 b0 = nbt(addr="block ~ ~ ~")
-st1 = nbt(addr="storage test path.to.some")[int]
-et1 = nbt(addr="entity @s Inventory.0")[list[int]]
+level = storage.mypack.data.Level[int]
+st1 = nbt(addr="storage test").path.to.some[int]
+et1 = nbt(addr="entity @s").Inventory[0][list[int]]
 ```
 
 ### `store(target OP= value)` Assignment Operations
