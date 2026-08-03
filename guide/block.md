@@ -46,14 +46,14 @@ my_pos = b~ ~ ~
 
 # Read block entity NBT into a Flare variable
 item_count = score()
-item_count[:] = my_pos.Items[0].Count
+item_count = my_pos.Items[0].Count
 
 # Write block entity data directly
 my_pos.Items[0].Count = 64
 
 # Assign complex properties
 custom_name = nbtstr()
-custom_name[:] = my_pos.CustomName
+custom_name = my_pos.CustomName
 ```
 
 ```mcfunction [__constants__.mcfunction]
