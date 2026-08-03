@@ -416,6 +416,12 @@ custom = ref(player["Custom Key"][str])
 # Compound filter — like Minecraft's [{"Slot": 0}] NBT path syntax
 main_hand = ref(player.Inventory[{"Slot": 0}])
 
+# Match-all list filter — appends [{}] to the path (selects all list elements)
+# All three forms are equivalent:
+all_items = ref(player.Inventory[:])   # x[:] → path[{}]
+all_items = ref(player.Inventory[])    # x[]  → same as x[:]
+all_items = ref(player.Inventory[{}])  # x[{}] → explicit empty compound filter
+
 # Reading or writing to the endpoint emits commands:
 hp = 20.0
 ```
@@ -425,6 +431,9 @@ data modify storage mypack data.Player.Health set value 20.0f
 ```
 
 :::
+
+> [!TIP] List filter shorthands
+> `x[]` and `x[:]` are preprocessor shorthands for `x[{}]` — they all resolve to the NBT path suffix `[{}]`, which matches every element in a list. You can also use `x[{"key": value}]` to filter by compound match, just like in raw Minecraft NBT path syntax.
 
 > [!TIP] Lazy evaluation
 > Building a path chain is free. **Commands are only emitted when you read or write** to the endpoint.
