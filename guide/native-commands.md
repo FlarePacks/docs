@@ -39,15 +39,15 @@ scoreboard objectives add __pack__vars__ dummy
 ```
 
 ```mcfunction [__init__.mcfunction]
-tp @a ~10 ~ ~   # Compiles to: tp @a ~10 ~ ~
+tp @a ~10 ~ ~
 scoreboard players set pack_x __pack__vars__ 5
 execute store result storage flare:macro arg_0 int 1 run scoreboard players get pack_x __pack__vars__
 function pack:macro_0 with storage flare:macro
-say I have 7 apples!   # Evaluates arbitrary Python expressions
+say I have 7 apples!
 ```
 
 ```mcfunction [macro_0.mcfunction]
-$scoreboard players set @s my_score $(arg_0)   # Injects the scoreboard expression
+$scoreboard players set @s my_score $(arg_0)
 ```
 
 :::

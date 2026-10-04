@@ -281,3 +281,104 @@ scoreboard players operation pack_dynamic_score __pack__vars__ = @p my_obj
 ```
 
 :::
+
+## Type Promotion & Casting
+
+Flare features a dynamic type lattice that automatically promotes operands in mixed-type arithmetic:
+
+- `score` (rank 10) + `fixed` (rank 20) $\rightarrow$ automatically promotes to `fixed`!
+- Lower-ranked values are scaled or widened to the least upper bound (LUB) without manual conversion.
+
+::: code-group
+
+```python [Flare]
+from flare import score, fixed, nbtint
+
+s = score(5)
+f = fixed(1.5)
+
+# Automatic promotion: s is scaled to fixed precision before addition
+result = s + f
+
+# Explicit casting
+s_as_fixed = s.cast(fixed)
+s_as_nbt = s.cast(nbtint)
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__constant__ dummy
+scoreboard players set #_10000 __pack__constant__ 10000
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_s __pack__vars__ 5
+scoreboard players set pack_f __pack__vars__ 15000
+scoreboard players operation pack_result __pack__vars__ = pack_f __pack__vars__
+scoreboard players operation #add0 __pack__temp__ = pack_s __pack__vars__
+scoreboard players operation #add0 __pack__temp__ *= #_10000 __pack__constant__
+scoreboard players operation pack_result __pack__vars__ += #add0 __pack__temp__
+scoreboard players operation #0 __pack__temp__ = pack_s __pack__vars__
+scoreboard players operation #0 __pack__temp__ *= #_10000 __pack__constant__
+scoreboard players operation pack_s_as_fixed __pack__vars__ = #0 __pack__temp__
+execute store result storage flare:temp t1 int 1 run scoreboard players get pack_s __pack__vars__
+data modify storage pack:vars pack_s_as_nbt set from storage flare:temp t1
+```
+
+:::
+
+## String to Score Parsing (`parse_int`)
+
+Flare can dynamically parse strings into integer scoreboards at runtime using `parse_int`:
+
+::: code-group
+
+```python [Flare]
+from flare import nbtstr, parse_int, score
+
+user_str = nbtstr("-1234")
+num = parse_int(user_str)
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__vars__ dummy
+scoreboard objectives add __pack__constant__ dummy
+scoreboard players set #_10 __pack__constant__ 10
+scoreboard players set #_n1 __pack__constant__ -1
+```
+
+```mcfunction [__init__.mcfunction]
+data modify storage pack:vars pack_user_str set value "-1234"
+data modify storage flare:temp parse_curr_1 set from storage pack:vars pack_user_str
+execute store result score #parse_len_1 __pack__temp__ run data get storage flare:temp parse_curr_1
+scoreboard players set #parse_neg_1 __pack__temp__ 0
+scoreboard players set pack_num __pack__vars__ 0
+execute if score #parse_len_1 __pack__temp__ matches 1.. run function pack:___init__/parse_int_loop_0
+execute if score #parse_neg_1 __pack__temp__ matches 1 run scoreboard players operation pack_num __pack__vars__ *= #_n1 __pack__constant__
+```
+
+```mcfunction [___init__/parse_int_loop_0.mcfunction]
+data modify storage flare:temp parse_char_1 set string storage flare:temp parse_curr_1 0 1
+data modify storage flare:temp parse_curr_1 set string storage flare:temp parse_curr_1 1
+scoreboard players remove #parse_len_1 __pack__temp__ 1
+execute if data storage flare:temp {"parse_char_1": "-"} run scoreboard players set #parse_neg_1 __pack__temp__ 1
+scoreboard players set #parse_dig_1 __pack__temp__ -1
+execute if data storage flare:temp {"parse_char_1": "0"} run scoreboard players set #parse_dig_1 __pack__temp__ 0
+execute if data storage flare:temp {"parse_char_1": "1"} run scoreboard players set #parse_dig_1 __pack__temp__ 1
+execute if data storage flare:temp {"parse_char_1": "2"} run scoreboard players set #parse_dig_1 __pack__temp__ 2
+execute if data storage flare:temp {"parse_char_1": "3"} run scoreboard players set #parse_dig_1 __pack__temp__ 3
+execute if data storage flare:temp {"parse_char_1": "4"} run scoreboard players set #parse_dig_1 __pack__temp__ 4
+execute if data storage flare:temp {"parse_char_1": "5"} run scoreboard players set #parse_dig_1 __pack__temp__ 5
+execute if data storage flare:temp {"parse_char_1": "6"} run scoreboard players set #parse_dig_1 __pack__temp__ 6
+execute if data storage flare:temp {"parse_char_1": "7"} run scoreboard players set #parse_dig_1 __pack__temp__ 7
+execute if data storage flare:temp {"parse_char_1": "8"} run scoreboard players set #parse_dig_1 __pack__temp__ 8
+execute if data storage flare:temp {"parse_char_1": "9"} run scoreboard players set #parse_dig_1 __pack__temp__ 9
+execute if score #parse_dig_1 __pack__temp__ matches 0.. run scoreboard players operation pack_num __pack__vars__ *= #_10 __pack__constant__
+execute if score #parse_dig_1 __pack__temp__ matches 0.. run scoreboard players operation pack_num __pack__vars__ += #parse_dig_1 __pack__temp__
+execute if score #parse_len_1 __pack__temp__ matches 1.. run function pack:___init__/parse_int_loop_0
+```
+
+:::
+

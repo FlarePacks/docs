@@ -22,8 +22,8 @@ d = float64(3.14159)
 
 ```mcfunction [__constants__.mcfunction]
 scoreboard objectives add __pack__vars__ dummy
-scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __flare_stdlib__ dummy
+scoreboard objectives add __pack__temp__ dummy
 scoreboard objectives add __pack__constant__ dummy
 scoreboard players set #_4096 __pack__constant__ 4096
 scoreboard players set #_2 __pack__constant__ 2
@@ -57,23 +57,23 @@ scoreboard players set pack_d_ml __pack__vars__ 1803886
 ```
 
 ```mcfunction [__float32_mul.mcfunction]
-scoreboard players operation #loc_a_2_s __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_s __flare_stdlib__
-scoreboard players operation #loc_a_2_e __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_e __flare_stdlib__
-scoreboard players operation #loc_a_2_m __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_m __flare_stdlib__
-scoreboard players operation #loc_b_3_s __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_s __flare_stdlib__
-scoreboard players operation #loc_b_3_e __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_e __flare_stdlib__
-scoreboard players operation #loc_b_3_m __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_m __flare_stdlib__
-scoreboard players operation #__flare_stdlib_____float32_mul_res_s __flare_stdlib__ = #loc_a_2_s __flare_stdlib__
-scoreboard players operation #__flare_stdlib_____float32_mul_res_s __flare_stdlib__ *= #loc_b_3_s __flare_stdlib__
-scoreboard players operation #__flare_stdlib_____float32_mul_res_e __flare_stdlib__ = #loc_a_2_e __flare_stdlib__
-scoreboard players operation #__flare_stdlib_____float32_mul_res_e __flare_stdlib__ += #loc_b_3_e __flare_stdlib__
-scoreboard players operation #a_hi __flare_stdlib__ = #loc_a_2_m __flare_stdlib__
+scoreboard players operation #loc_a_0_s __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_s __flare_stdlib__
+scoreboard players operation #loc_a_0_e __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_e __flare_stdlib__
+scoreboard players operation #loc_a_0_m __flare_stdlib__ = #__flare_stdlib_____float32_mul_a_m __flare_stdlib__
+scoreboard players operation #loc_b_1_s __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_s __flare_stdlib__
+scoreboard players operation #loc_b_1_e __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_e __flare_stdlib__
+scoreboard players operation #loc_b_1_m __flare_stdlib__ = #__flare_stdlib_____float32_mul_b_m __flare_stdlib__
+scoreboard players operation #__flare_stdlib_____float32_mul_res_s __flare_stdlib__ = #loc_a_0_s __flare_stdlib__
+scoreboard players operation #__flare_stdlib_____float32_mul_res_s __flare_stdlib__ *= #loc_b_1_s __flare_stdlib__
+scoreboard players operation #__flare_stdlib_____float32_mul_res_e __flare_stdlib__ = #loc_a_0_e __flare_stdlib__
+scoreboard players operation #__flare_stdlib_____float32_mul_res_e __flare_stdlib__ += #loc_b_1_e __flare_stdlib__
+scoreboard players operation #a_hi __flare_stdlib__ = #loc_a_0_m __flare_stdlib__
 scoreboard players operation #a_hi __flare_stdlib__ /= #_4096 __pack__constant__
-scoreboard players operation #a_lo __flare_stdlib__ = #loc_a_2_m __flare_stdlib__
+scoreboard players operation #a_lo __flare_stdlib__ = #loc_a_0_m __flare_stdlib__
 scoreboard players operation #a_lo __flare_stdlib__ %= #_4096 __pack__constant__
-scoreboard players operation #b_hi __flare_stdlib__ = #loc_b_3_m __flare_stdlib__
+scoreboard players operation #b_hi __flare_stdlib__ = #loc_b_1_m __flare_stdlib__
 scoreboard players operation #b_hi __flare_stdlib__ /= #_4096 __pack__constant__
-scoreboard players operation #b_lo __flare_stdlib__ = #loc_b_3_m __flare_stdlib__
+scoreboard players operation #b_lo __flare_stdlib__ = #loc_b_1_m __flare_stdlib__
 scoreboard players operation #b_lo __flare_stdlib__ %= #_4096 __pack__constant__
 scoreboard players operation #__flare_stdlib_____float32_mul_res_m __flare_stdlib__ = #a_hi __flare_stdlib__
 scoreboard players operation #__flare_stdlib_____float32_mul_res_m __flare_stdlib__ *= #b_hi __flare_stdlib__
@@ -231,7 +231,50 @@ scoreboard players operation pack_c __pack__vars__ /= #_100000 __pack__constant_
 
 :::
 
+## Type Promotion & Arithmetic Interoperability
+
+Flare's type lattice seamlessly promotes arithmetic operands between numeric representations:
+
+- `score` (rank 10)
+- `fixed` (rank 20)
+- `bigscore` (rank 30)
+- `float32` (rank 40)
+- `float64` (rank 50)
+
+When performing binary operations between two different types, Flare finds the least upper bound (LUB) and promotes the lower-ranked value automatically:
+
+::: code-group
+
+```python [Flare]
+from flare import score, fixed
+
+s = score(10)
+f = fixed(2.5)
+
+# Automatic promotion: 's' is converted to 'fixed' before addition
+res = s + f
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__constant__ dummy
+scoreboard players set #_10000 __pack__constant__ 10000
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_s __pack__vars__ 10
+scoreboard players set pack_f __pack__vars__ 25000
+scoreboard players operation pack_res __pack__vars__ = pack_f __pack__vars__
+scoreboard players operation #add0 __pack__temp__ = pack_s __pack__vars__
+scoreboard players operation #add0 __pack__temp__ *= #_10000 __pack__constant__
+scoreboard players operation pack_res __pack__vars__ += #add0 __pack__temp__
+```
+
+:::
+
 ## Random Generation (`flrand`)
+
 
 Flare provides a module for generating random numbers and selecting random elements natively in Minecraft, mirroring Python's standard `random` module.
 

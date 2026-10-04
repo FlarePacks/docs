@@ -470,3 +470,73 @@ execute store result storage test vars[5] byte 1 run scoreboard players get pack
 ```
 
 :::
+
+---
+
+## Type Conversion & String Casting
+
+Flare supports automatic cross-type conversion and explicit casting between NBT types and scoreboards:
+
+### Numeric Widening and `.cast()`
+
+Assigning between different numeric types is automatically widening-checked and promoted:
+
+::: code-group
+
+```python [Flare]
+from flare import nbtint, nbtdouble, score
+
+count = nbtint(42)
+d = count.cast(nbtdouble)
+s = count.cast(score)
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+data modify storage flare:temp t0 set value 42
+execute store result storage pack:vars pack_d double 1.0 run data get storage flare:temp t0
+execute store result score #1 __pack__temp__ run data get storage flare:temp t0
+scoreboard players operation pack_s __pack__vars__ = #1 __pack__temp__
+```
+
+:::
+
+### Number to String Conversion (`to_str`)
+
+You can convert any numeric NBT value or scoreboard score directly to an `nbtstr` in $O(1)$ zero ticks:
+
+::: code-group
+
+```python [Flare]
+from flare import score, nbtstr, nbtint
+
+s = score(123)
+text = nbtstr()
+text[...] = s  # Emits data modify set string
+
+n = nbtint(456)
+str_from_nbt = n.to_str()
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_s __pack__vars__ 123
+execute store result storage flare:temp num_1 val int 1 run scoreboard players get pack_s __pack__vars__
+data modify storage flare:temp s2str_1 set value ""
+data modify storage flare:temp s2str_1 set string storage flare:temp num_1 val
+data modify storage flare:temp t0 set from storage flare:temp s2str_1
+data modify storage pack:vars pack_n set value 456
+data modify storage flare:temp n2str_2 set value ""
+data modify storage flare:temp n2str_2 set string storage pack:vars pack_n
+data modify storage pack:vars pack_str_from_nbt set from storage flare:temp n2str_2
+```
+
+:::
+

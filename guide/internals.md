@@ -534,7 +534,7 @@ function pack:___init__/if_0
 ```
 
 ```mcfunction [___init__/if_0.mcfunction]
-execute if score pack_x __pack__vars__ matches 6.. run return 5
+execute if score pack_x __pack__vars__ matches 6.. run return 1
 tellraw @a "2"
 ```
 
@@ -585,4 +585,52 @@ data modify storage mypack:custom_nbt mypack_my_nbt set value 5
 ```
 
 :::
+
+## Custom Types & Dynamic Lattice Ranking
+
+Flare allows third-party developers and extensions to define custom types that seamlessly participate in Flare's type system and automatic arithmetic promotion.
+
+### Defining Lattice Rank
+
+Every type can define its relative precedence rank along the coercion lattice. You can use the `@lattice_type(rank)` decorator or define `_lattice_rank` directly on the class:
+
+| Built-in Type | Lattice Rank | Description |
+|:---|:---|:---|
+| `score` | 10 | 32-bit integer scoreboard |
+| `fixed` | 20 | Scaled fixed-point scoreboard |
+| `bigscore` | 30 | Multi-limb big integer |
+| `float32` | 40 | Software IEEE 754 single-precision float |
+| `float64` | 50 | Software IEEE 754 double-precision float |
+
+### Creating a Custom Type
+
+To participate in automatic promotion, inherit from `FlareValue` and implement `__implicit__(self, target_types)`:
+
+::: code-group
+
+```python [Flare]
+from flare.variables.core import FlareValue, lattice_type, get_lattice_rank
+from flare import score
+
+@lattice_type(25)
+class HexScore(FlareValue):
+    def __init__(self, val=0):
+        self.s = score(val)
+    
+    def __implicit__(self, target_types):
+        # Convert to another type if requested
+        if score in target_types:
+            return self.s
+        return self
+
+hex_val = HexScore(0xFF)
+print(get_lattice_rank(HexScore))
+```
+
+```mcfunction [__init__.mcfunction]
+tellraw @a "25"
+```
+
+:::
+
 
