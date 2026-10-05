@@ -110,18 +110,13 @@ scoreboard objectives add __pack__temp__ dummy
 
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_x __pack__vars__ 5
-scoreboard players set #in_0 __pack__temp__ 0
-execute if score #in_0 __pack__temp__ matches 0 if score pack_x __pack__vars__ matches 1 run scoreboard players set #in_0 __pack__temp__ 1
-execute if score #in_0 __pack__temp__ matches 0 if score pack_x __pack__vars__ matches 3 run scoreboard players set #in_0 __pack__temp__ 1
-execute if score #in_0 __pack__temp__ matches 0 if score pack_x __pack__vars__ matches 5 run scoreboard players set #in_0 __pack__temp__ 1
-execute if score #in_0 __pack__temp__ matches 0 if score pack_x __pack__vars__ matches 7 run scoreboard players set #in_0 __pack__temp__ 1
-execute if score #in_0 __pack__temp__ matches 1 run tellraw @a "X is an odd number under 10!"
+tellraw @a "X is an odd number under 10!"
 data modify storage pack:vars pack_my_str set value "flare"
-scoreboard players set #in_1 __pack__temp__ 0
-execute if score #in_1 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "apple"} run scoreboard players set #in_1 __pack__temp__ 1
-execute if score #in_1 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "flare"} run scoreboard players set #in_1 __pack__temp__ 1
-execute if score #in_1 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "banana"} run scoreboard players set #in_1 __pack__temp__ 1
-execute if score #in_1 __pack__temp__ matches 1 run tellraw @a "String found!"
+scoreboard players set #in_0 __pack__temp__ 0
+execute if score #in_0 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "apple"} run scoreboard players set #in_0 __pack__temp__ 1
+execute if score #in_0 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "flare"} run scoreboard players set #in_0 __pack__temp__ 1
+execute if score #in_0 __pack__temp__ matches 0 if data storage pack:vars {"pack_my_str": "banana"} run scoreboard players set #in_0 __pack__temp__ 1
+execute if score #in_0 __pack__temp__ matches 1 run tellraw @a "String found!"
 ```
 
 :::
