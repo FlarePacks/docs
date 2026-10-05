@@ -245,3 +245,52 @@ tellraw @a "Never!"
 ::: tip Compile-time execution
 Because Flare evaluates static Python conditions at compile-time, you can use them to conditionally generate entire systems or commands in your datapack without wasting any runtime performance!
 :::
+
+## State Machines & Enums (`StateEnum`)
+
+Datapack developers frequently organize game systems into discrete states (e.g. `LOBBY`, `STARTING`, `IN_GAME`, `GAME_OVER`). Flare provides first-class `StateEnum` and `state` types with compile-time type safety and native `match/case` support:
+
+::: code-group
+
+```python [Flare]
+from flare import StateEnum, state, selector
+
+class GamePhase(StateEnum):
+    LOBBY = 0
+    ACTIVE = 1
+    ENDED = 2
+
+phase = state(GamePhase.LOBBY)
+
+# State transitions
+phase[...] = GamePhase.ACTIVE
+
+# Type-safe pattern matching
+match phase:
+    case GamePhase.LOBBY:
+        selector("@a").print("Waiting for players...")
+    case GamePhase.ACTIVE:
+        selector("@a").print("Game is running!")
+    case GamePhase.ENDED:
+        selector("@a").print("Game over!")
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__state__ dummy
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set #gamephase __pack__state__ 0
+scoreboard players set pack_phase __pack__vars__ 1
+function pack:___init__/if_0
+```
+
+```mcfunction [___init__/if_0.mcfunction]
+execute if score pack_phase __pack__vars__ matches 0 run return run tellraw @a "Waiting for players..."
+execute if score pack_phase __pack__vars__ matches 1 run return run tellraw @a "Game is running!"
+execute if score pack_phase __pack__vars__ matches 2 run return run tellraw @a "Game over!"
+```
+
+:::
+

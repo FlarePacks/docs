@@ -529,11 +529,9 @@ scoreboard objectives add __pack__vars__ dummy
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_s __pack__vars__ 123
 execute store result storage flare:temp num_1 val int 1 run scoreboard players get pack_s __pack__vars__
-data modify storage flare:temp s2str_1 set value ""
 data modify storage flare:temp s2str_1 set string storage flare:temp num_1 val
 data modify storage flare:temp t0 set from storage flare:temp s2str_1
 data modify storage pack:vars pack_n set value 456
-data modify storage flare:temp n2str_2 set value ""
 data modify storage flare:temp n2str_2 set string storage pack:vars pack_n
 data modify storage pack:vars pack_str_from_nbt set from storage flare:temp n2str_2
 ```

@@ -18,6 +18,7 @@ Below is a list of all available properties you can define in your `flare.json`.
 | `minecraft_version`         | `string`           | `"1.20.4"`           | The Minecraft version to use for schema validation.                                                                     |
 | `system_command_validation` | `string`           | `"none"`             | Sets the internal Minecraft command schema validation level for internal system commands (`strict`, `warning`, `none`). |
 | `nbt_schema_missing`        | `string`           | `"error"`            | Action to take when indexing an NBT path that doesn't exist in the attached schema (`error`, `warning`, `ignore`).      |
+| `optimize`                  | `boolean`          | `true`               | Enables the peephole optimizer pass (eliminates identity moves, dead stores, and zero arithmetic).                        |
 | `autoreload`                | `string`/`boolean` | `false`              | World URI (or `true` for `world://_last`) to automatically setup an autoreload background pack to trigger `/reload`.    |
 
 ---

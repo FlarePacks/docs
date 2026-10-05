@@ -184,3 +184,46 @@ advancement revoke @a until my_namespace:my_advancement
 ```
 
 :::
+
+## Entity Actions & Gameplay Helpers
+
+Selectors provide high-level, Pythonic methods for core Minecraft gameplay actions:
+
+::: code-group
+
+```python [Flare]
+p = @s
+
+# Potion effects
+p.effect.give("speed", duration=30, amplifier=1, show_particles=True)
+p.effect.clear("slowness")
+
+# Damage
+p.damage(10, damage_type="magic", by="@e[type=zombie,limit=1]")
+
+# Sounds & Gamemode
+p.playsound("entity.experience_orb.pickup", channel="player", volume=1.0, pitch=1.2)
+p.gamemode("adventure")
+
+# Experience
+p.xp.add(100)
+p.xp.add_levels(5)
+
+# Entity mounting & riding
+p.ride.mount("@e[type=horse,limit=1]")
+p.ride.dismount()
+```
+
+```mcfunction [__init__.mcfunction]
+effect give @s speed 30 1 false
+effect clear @s slowness
+damage @s 10 magic by @e[type=zombie,limit=1]
+playsound entity.experience_orb.pickup player @s ~ ~ ~ 1.0 1.2
+gamemode adventure @s
+experience add @s 100 points
+experience add @s 5 levels
+ride @s mount @e[type=horse,limit=1]
+ride @s dismount
+```
+
+:::

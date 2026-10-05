@@ -63,7 +63,6 @@ scoreboard objectives add __pack__vars__ dummy
 ```mcfunction [__init__.mcfunction]
 execute store result score pack_item_count __pack__vars__ run data get block ~ ~ ~ Items[0].Count
 data modify block ~ ~ ~ Items[0].Count set value 64
-data modify storage pack:vars pack_custom_name set value ""
 data modify storage pack:vars pack_custom_name set string block ~ ~ ~ CustomName
 ```
 

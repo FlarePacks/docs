@@ -85,8 +85,7 @@ scoreboard players operation #temp2 __flare_stdlib__ *= #b_hi __flare_stdlib__
 scoreboard players operation #temp1 __flare_stdlib__ += #temp2 __flare_stdlib__
 scoreboard players operation #temp1 __flare_stdlib__ /= #_2048 __pack__constant__
 scoreboard players operation #__flare_stdlib_____float32_mul_res_m __flare_stdlib__ += #temp1 __flare_stdlib__
-scoreboard players set #shift __flare_stdlib__ 0
-execute if score #__flare_stdlib_____float32_mul_res_m __flare_stdlib__ matches 16777216..2147483647 run scoreboard players set #shift __flare_stdlib__ 1
+scoreboard players set #shift __flare_stdlib__ 1
 execute if score #shift __flare_stdlib__ matches 1 run scoreboard players operation #__flare_stdlib_____float32_mul_res_m __flare_stdlib__ /= #_2 __pack__constant__
 execute if score #shift __flare_stdlib__ matches 1 run scoreboard players add #__flare_stdlib_____float32_mul_res_e __flare_stdlib__ 1
 ```
@@ -299,3 +298,100 @@ chance = flrand.random()
 ```
 
 > **Note**: For advanced users, `flrand.random(type=MyClass)` provides custom hooks to generate complex random structures via `__random__` and `__rrandom__` dunder methods. See the [Internals](internals.md#random-and-rrandom-—-custom-random-generation) guide for details.
+
+## 3D Spatial Vector Math (`vec3`)
+
+Flare includes a native `vec3` type for 3D coordinate arithmetic, physics, and entity motion manipulation:
+
+::: code-group
+
+```python [Flare]
+from flare import vec3
+
+# 1. Coordinate instantiation and arithmetic
+v1 = vec3(10, 20, 30)
+v2 = vec3(1, 2, 3)
+
+v3 = v1 + v2
+scaled = v1 * 2
+
+# 2. Vector operations
+dot_product = v1.dot(v2)
+cross_product = v1.cross(v2)
+dist = v1.distance_to(v2)
+
+# 3. Synchronizing with Entity Pos / Motion
+pos = vec3.from_entity("@s", "Pos")
+pos.y += 2
+pos.apply_to("@s", "Pos")
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__constant__ dummy
+scoreboard objectives add __pack__vars__ dummy
+scoreboard players set #_2 __pack__constant__ 2
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set #v0_x __pack__temp__ 10
+scoreboard players set #v0_y __pack__temp__ 20
+scoreboard players set #v0_z __pack__temp__ 30
+scoreboard players set #v1_x __pack__temp__ 1
+scoreboard players set #v1_y __pack__temp__ 2
+scoreboard players set #v1_z __pack__temp__ 3
+scoreboard players operation #v2_x __pack__temp__ = #v0_x __pack__temp__
+scoreboard players operation #v2_x __pack__temp__ += #v1_x __pack__temp__
+scoreboard players operation #v2_y __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation #v2_y __pack__temp__ += #v1_y __pack__temp__
+scoreboard players operation #v2_z __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation #v2_z __pack__temp__ += #v1_z __pack__temp__
+scoreboard players operation #v3_x __pack__temp__ = #v0_x __pack__temp__
+scoreboard players operation #v3_x __pack__temp__ *= #_2 __pack__constant__
+scoreboard players operation #v3_y __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation #v3_y __pack__temp__ *= #_2 __pack__constant__
+scoreboard players operation #v3_z __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation #v3_z __pack__temp__ *= #_2 __pack__constant__
+scoreboard players operation pack_dot_product __pack__vars__ = #v0_x __pack__temp__
+scoreboard players operation pack_dot_product __pack__vars__ *= #v1_x __pack__temp__
+scoreboard players operation pack_dot_product_4 __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation pack_dot_product_4 __pack__temp__ *= #v1_y __pack__temp__
+scoreboard players operation pack_dot_product __pack__vars__ += pack_dot_product_4 __pack__temp__
+scoreboard players operation pack_dot_product_5 __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation pack_dot_product_5 __pack__temp__ *= #v1_z __pack__temp__
+scoreboard players operation pack_dot_product __pack__vars__ += pack_dot_product_5 __pack__temp__
+scoreboard players operation #v6_x __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation #v6_x __pack__temp__ *= #v1_z __pack__temp__
+scoreboard players operation #v6_x_7 __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation #v6_x_7 __pack__temp__ *= #v1_y __pack__temp__
+scoreboard players operation #v6_x __pack__temp__ -= #v6_x_7 __pack__temp__
+scoreboard players operation #v6_y __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation #v6_y __pack__temp__ *= #v1_x __pack__temp__
+scoreboard players operation #v6_y_8 __pack__temp__ = #v0_x __pack__temp__
+scoreboard players operation #v6_y_8 __pack__temp__ *= #v1_z __pack__temp__
+scoreboard players operation #v6_y __pack__temp__ -= #v6_y_8 __pack__temp__
+scoreboard players operation #v6_z __pack__temp__ = #v0_x __pack__temp__
+scoreboard players operation #v6_z __pack__temp__ *= #v1_y __pack__temp__
+scoreboard players operation #v6_z_9 __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation #v6_z_9 __pack__temp__ *= #v1_x __pack__temp__
+scoreboard players operation #v6_z __pack__temp__ -= #v6_z_9 __pack__temp__
+scoreboard players operation #v10_x __pack__temp__ = #v0_x __pack__temp__
+scoreboard players operation #v10_x __pack__temp__ -= #v1_x __pack__temp__
+scoreboard players operation #v10_y __pack__temp__ = #v0_y __pack__temp__
+scoreboard players operation #v10_y __pack__temp__ -= #v1_y __pack__temp__
+scoreboard players operation #v10_z __pack__temp__ = #v0_z __pack__temp__
+scoreboard players operation #v10_z __pack__temp__ -= #v1_z __pack__temp__
+scoreboard players set #v11_x __pack__temp__ 0
+scoreboard players set #v11_y __pack__temp__ 0
+scoreboard players set #v11_z __pack__temp__ 0
+execute store result score #v11_x __pack__temp__ run data get entity @s Pos[0]
+execute store result score #v11_y __pack__temp__ run data get entity @s Pos[1]
+execute store result score #v11_z __pack__temp__ run data get entity @s Pos[2]
+scoreboard players add #v11_y __pack__temp__ 2
+execute store result entity @s Pos[0] double 1.0 run scoreboard players get #v11_x __pack__temp__
+execute store result entity @s Pos[1] double 1.0 run scoreboard players get #v11_y __pack__temp__
+execute store result entity @s Pos[2] double 1.0 run scoreboard players get #v11_z __pack__temp__
+```
+
+:::
+

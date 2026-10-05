@@ -106,3 +106,58 @@ say {item_nbt}
 ::: tip NBT Smart Lexer
 Flare's lexer understands Minecraft data types and compound structures natively. You don't need to quote NBT keys inside commands or `nbt{...}` compounds (`Tags:` instead of `"Tags":`), and Python variables or expressions inside `{...}` will be evaluated and formatted into minified SNBT automatically.
 :::
+
+## Raycasting Engine (`raycast`)
+
+Flare includes a built-in recursive raycasting engine that handles stepping, max distance bounds, entity collision, and solid block collision checks automatically:
+
+```python
+from flare import raycast, selector
+
+def on_step():
+    particle flame ~ ~ ~ 0 0 0 0 1
+
+def on_hit_entity(target):
+    target.damage(10, damage_type="magic", by="@s")
+
+def on_hit_block(hit_block):
+    hit_block.set("fire")
+
+# Launch raycast stepping 0.25 blocks up to 30 blocks
+raycast(
+    step=0.25,
+    max_distance=30.0,
+    on_step=on_step,
+    on_hit_entity=on_hit_entity,
+    on_hit_block=on_hit_block,
+    stop_on_hit=True
+)
+```
+
+## Bossbars (`Bossbar`)
+
+Manage Minecraft bossbars with automatic load registration and bidirectional scoreboard binding:
+
+```python
+from flare import Bossbar, score
+
+bar = Bossbar("quest_bar", "Boss Fight", color="purple", style="notched_10", max_value=100)
+bar.set_players("@a")
+
+boss_hp = score(75)
+bar.value = boss_hp
+```
+
+## Storage Scope (`storage_scope`)
+
+Scope multiple relative NBT reads and writes to a target storage address using a context manager:
+
+```python
+from flare import storage_scope
+
+with storage_scope("pack:player_cache") as cache:
+    cache.kills = 12
+    cache.deaths = 1
+    cache.player_name = "Alex"
+```
+

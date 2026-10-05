@@ -201,7 +201,6 @@ scoreboard objectives add __pack__vars__ dummy
 
 ```mcfunction [__init__.mcfunction]
 scoreboard players set pack_x __pack__vars__ 10
-scoreboard players set pack_y __pack__vars__ 20
 scoreboard players operation pack_y __pack__vars__ = pack_x __pack__vars__
 ```
 
