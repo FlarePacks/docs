@@ -633,4 +633,15 @@ tellraw @a "25"
 
 :::
 
+## Peephole Optimizer Pipeline
+
+Flare automatically runs a multi-pass peephole optimizer over generated `.mcfunction` command streams before writing output files or caching. The optimizer executes three key optimization stages:
+
+1. **Identity Move Elimination**: Removes redundant operations that copy a scoreboard or NBT register to itself (e.g., `scoreboard players operation #x obj = #x obj`).
+2. **Identity Arithmetic Elimination**: Prunes neutral arithmetic operations that have no observable effect (such as adding/subtracting 0, or multiplying/dividing by 1).
+3. **Block-Level Dead Store Elimination**: Detects and eliminates dead temporary scoreboard writes where a temporary register is overwritten within the same basic block before ever being read.
+
+This pipeline runs transparently, ensuring generated Minecraft functions remain as concise and fast as possible without requiring manual micro-optimizations in your Python code.
+
+
 

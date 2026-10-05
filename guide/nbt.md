@@ -50,6 +50,27 @@ data modify storage pack:vars pack_level set from storage mypack data.Level
 > Use `ref()` when you only want a shorthand for an existing path. Without `ref()`, Flare emits a
 `data modify ... set from ...` command, creating a new copy.
 
+### Scoped Storage Context (`storage_scope`)
+
+When operating on multiple paths in the same storage target, `storage_scope` provides a clean context manager that avoids repeating the target address:
+
+::: code-group
+
+```python [Flare]
+from flare import storage_scope
+
+with storage_scope("mypack:data") as s:
+    s.level = 5
+    s.score = 100
+```
+
+```mcfunction [__init__.mcfunction]
+data modify storage mypack:data level set value 5
+data modify storage mypack:data score set value 100
+```
+
+:::
+
 ## NBT Type System
 
 ### Scalar types
@@ -239,6 +260,45 @@ You can retrieve the number of items or nodes inside a sequence natively using `
 # Evaluates directly into a score count!
 n = len(items)
 ```
+
+### Dynamic Scoreboard Indexing
+
+You can dynamically read and write NBT list elements using a scoreboard variable as the index. Flare automatically compiles this into parameterized macro calls:
+
+::: code-group
+
+```python [Flare]
+from flare import storage, score, ref
+
+items = ref(storage mypack data.Items[list])
+idx = score(2)
+
+# Dynamically read and write by scoreboard index
+target_item = items[idx]
+items[idx] = "diamond"
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_idx __pack__vars__ 2
+execute store result storage pack:__flare_temp__ __dyn_idx_args_0.index int 1 run scoreboard players get pack_idx __pack__vars__
+function __flare_stdlib__:__flare_dyn_get_0 with storage pack:__flare_temp__ __dyn_idx_args_0
+execute store result storage pack:__flare_temp__ __dyn_idx_args_1.index int 1 run scoreboard players get pack_idx __pack__vars__
+function __flare_stdlib__:__flare_dyn_set_1 with storage pack:__flare_temp__ __dyn_idx_args_1
+```
+
+```mcfunction [__flare_dyn_get_0.mcfunction]
+$data modify storage flare:temp pack_target_item set from storage mypack data.Items[$(index)]
+```
+
+```mcfunction [__flare_dyn_set_1.mcfunction]
+$data modify storage mypack data.Items[$(index)] set value diamond
+```
+
+:::
 
 ### Iteration
 

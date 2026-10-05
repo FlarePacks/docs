@@ -32,9 +32,85 @@ All standard Python arithmetic operators are supported:
 
 | Operator                   | Minecraft equivalent                           |
 |----------------------------|------------------------------------------------|
-| `+`, `-`, `*`, `//`        | `scoreboard players operation ... +=/-=/*=//=` |
+| `+`, `-`, `*`, `//`, `%`   | `scoreboard players operation ... +=/-=/*=//=` |
 | `+=`, `-=`, `*=`, `//=`    | In-place scoreboard operations                 |
+| `**`, `**=`                | Exponentiation (fast binary exponentiation)    |
+| `<<`, `>>`, `<<=`, `>>=`   | Bitwise shifts (powers of two)                 |
 | `<`, `<=`, `>`, `>=`, `==` | `execute if score ... matches`                 |
+| `in`                       | Range check (`execute if score ... matches`)   |
+
+## Exponentiation & Bitwise Shifts
+
+Flare natively supports exponentiation and bitwise shift operators on scoreboards:
+
+- `**` / `**=`: Powers of integers are computed via unrolled binary exponentiation.
+- `<<` / `>>`: Bitwise shifts multiply and divide by powers of 2.
+
+::: code-group
+
+```python [Flare]
+from flare import score
+
+x = score(3)
+y = x ** 3   # 3^3 = 27
+
+a = score(16)
+b = a >> 2   # 16 // 4 = 4
+c = a << 1   # 16 * 2 = 32
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+scoreboard objectives add __pack__temp__ dummy
+scoreboard objectives add __pack__constant__ dummy
+scoreboard players set #_4 __pack__constant__ 4
+scoreboard players set #_2 __pack__constant__ 2
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_x __pack__vars__ 3
+scoreboard players operation pack_y __pack__vars__ = pack_x __pack__vars__
+scoreboard players operation #temp_0 __pack__temp__ = pack_y __pack__vars__
+scoreboard players set #temp_1 __pack__temp__ 1
+scoreboard players operation #temp_1 __pack__temp__ *= #temp_0 __pack__temp__
+scoreboard players operation #temp_0 __pack__temp__ *= #temp_0 __pack__temp__
+scoreboard players operation #temp_1 __pack__temp__ *= #temp_0 __pack__temp__
+scoreboard players operation pack_y __pack__vars__ = #temp_1 __pack__temp__
+scoreboard players set pack_a __pack__vars__ 16
+scoreboard players operation pack_b __pack__vars__ = pack_a __pack__vars__
+scoreboard players operation pack_b __pack__vars__ /= #_4 __pack__constant__
+scoreboard players operation pack_c __pack__vars__ = pack_a __pack__vars__
+scoreboard players operation pack_c __pack__vars__ *= #_2 __pack__constant__
+```
+
+:::
+
+## Range Membership (`in`)
+
+Use Python's `in` operator to check if a scoreboard variable falls within a numeric range or interval:
+
+::: code-group
+
+```python [Flare]
+from flare import score
+
+level = score(7)
+
+# Compiles to: execute if score ... matches 1..9
+if level in range(1, 10):
+    print("Level is valid!")
+```
+
+```mcfunction [__constants__.mcfunction]
+scoreboard objectives add __pack__vars__ dummy
+```
+
+```mcfunction [__init__.mcfunction]
+scoreboard players set pack_level __pack__vars__ 7
+execute if score pack_level __pack__vars__ matches 1..9 run tellraw @a "Level is valid!"
+```
+
+:::
 
 ## Fixed Precision (`fixed`)
 

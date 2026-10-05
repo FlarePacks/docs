@@ -232,15 +232,16 @@ say Data was valid!
 
 :::
 
-## Game Loop Integrations (`@tick` and `@load`)
+## Function Tags (`@tag`, `@tick`, and `@load`)
 
-Flare provides specialized decorators for automatically hooking your functions into Minecraft's execution loop.
+Flare provides decorators for automatically hooking your functions into Minecraft's execution loop and custom tags:
 
-- `@tick`: Operates identically to `@export`, but automatically registers the generated function to the `#minecraft:tick` function tag, causing it to run 20 times a second.
-- `@load`: Operates identically to `@export`, but automatically registers the generated function to the `#minecraft:load` function tag, causing it to run when the datapack is reloaded or the world is loaded.
+- `@tick`: Registers the function to `#minecraft:tick`, running 20 times per second.
+- `@load`: Registers the function to `#minecraft:load`, running on startup or `/reload`.
+- `@tag(*names)`: Registers the function to one or more custom or vanilla function tags.
 
 ```python
-from flare import tick, load, score
+from flare import tick, load, tag, score
 
 my_global = score("my_global")
 
@@ -253,6 +254,11 @@ def init():
 def loop():
     # Runs 20 times a second
     my_global += 1
+
+@tag("minecraft:tick", "my_pack:gameplay_loop")
+def on_custom_loop():
+    # Automatically registered in both tag JSONs!
+    pass
 ```
 
 > **Note**: Just like `@export`, these decorators also accept `name` keyword arguments to customize the generated function file name.
